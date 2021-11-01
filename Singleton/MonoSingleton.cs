@@ -1,87 +1,84 @@
 using UnityEngine;
 using System.Collections;
-using System.Threading;
-
+using System.Collections.Generic;
 
 /// <summary>
-/// 單實例模式
-/// ref: https://www.cnblogs.com/fastcam/p/5924036.html
+/// Mono singleton Class. Extend this class to make singleton component.
+/// Example: 
+/// <code>
+/// public class Foo : MonoSingleton<Foo>
+/// </code>. To get the instance of Foo class, use <code>Foo.Instance</code>
+/// Override <code>Init()</code> method instead of using <code>Awake()</code>
+/// from this class.
+/// edited from https://gist.github.com/onevcat/6025819
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public abstract class MonoSingleton<T> : MonoBehaviour
-where T : MonoSingleton<T>
+public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
-
     private static T m_Instance = null;
-    private static string name;
-    private static Mutex mutex;
     public static T Instance
     {
         get
         {
-            if (m_Instance == null)
+            // Instance requiered for the first time, we look for it
+            if( m_Instance == null )
             {
-                if (IsSingle())
+                m_Instance = GameObject.FindObjectOfType(typeof(T)) as T;
+
+                // Object not found, we create a temporary one
+                if( m_Instance == null )
                 {
-                    m_Instance = new GameObject(name, typeof(T)).GetComponent<T>();
-                    m_Instance.SingletonInit();
+  				Debug.LogWarning("No instance of " + typeof(T).ToString() + ", a temporary one is created.");
+
+					isTemporaryInstance = true;
+                    m_Instance = new GameObject("Temp Instance of " + typeof(T).ToString(), typeof(T)).GetComponent<T>();
+
+                    // Problem during the creation, this should not happen
+                    if( m_Instance == null )
+                    {
+                        Debug.LogError("Problem during the creation of " + typeof(T).ToString());
+                    }
                 }
+				if (!_isInitialized){
+					_isInitialized = true;
+					m_Instance.Init();
+				}
             }
             return m_Instance;
         }
     }
 
-    private static bool IsSingle()
-    {
-        bool createdNew;
-        name = "Singleton of " + typeof(T).ToString();
-        mutex = new Mutex(false, name, out createdNew);
-        return createdNew;
-    }
+	public static bool isTemporaryInstance { private set; get; }
 
+	private static bool _isInitialized;
+
+    // If no other monobehaviour request the instance in an awake function
+    // executing before this one, no need to search the object.
     private void Awake()
     {
-        if (m_Instance == null)
-        {
-            if (IsSingle())
-            {
-                m_Instance = this as T;
-                m_Instance.SingletonInit();
-            }
-        }
-        else
-        {
-            Destroy(this);
-        }
+        if (m_Instance == null) {
+			m_Instance = this as T;
+		} else if (m_Instance != this) {
+			Debug.LogError ("Another instance of " + GetType () + " is already exist! Destroying self...");
+			DestroyImmediate (this);
+			return;
+		}
+		if (!_isInitialized) {
+			DontDestroyOnLoad(gameObject);
+			_isInitialized = true;
+			m_Instance.Init ();
+		}
     }
-
-    private void OnDestory()
-    {
-        if (m_Instance != null)
-        {
-            mutex.ReleaseMutex();
-            SingletonDestroy();
-            m_Instance = null;
-        }
-    }
+	
+	
+    /// <summary>
+    /// This function is called when the instance is used the first time
+    /// Put all the initializations you need here, as you would do in Awake
+    /// </summary>
+	public virtual void Init(){}
+ 
+    /// Make sure the instance isn't referenced anymore when the user quit, just in case.
     private void OnApplicationQuit()
     {
-        mutex.ReleaseMutex();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected virtual void SingletonInit()
-    {
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected virtual void SingletonDestroy()
-    {
-
+        m_Instance = null;
     }
 }
