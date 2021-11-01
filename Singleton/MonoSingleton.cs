@@ -1,51 +1,87 @@
 using UnityEngine;
- 
-/// <summary>
-/// Usage: 
-/// public class MyClassName : Singleton<MyClassName> {}
-/// </summary>
-[DisallowMultipleComponent]
-public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
-{
-    // Avoid dulpicated creation when called at the same time
-    private static object _lock = new object();
+using System.Collections;
+using System.Threading;
 
-    // Real instance
-    private static T _instance;
- 
-    /// <summary>
-    /// Instance.
-    /// </summary>
+
+/// <summary>
+/// 單實例模式
+/// ref: https://www.cnblogs.com/fastcam/p/5924036.html
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public abstract class MonoSingleton<T> : MonoBehaviour
+where T : MonoSingleton<T>
+{
+
+    private static T m_Instance = null;
+    private static string name;
+    private static Mutex mutex;
     public static T Instance
     {
         get
-        { 
-            lock (_lock)
+        {
+            if (m_Instance == null)
             {
-                if (!_instance)
+                if (IsSingle())
                 {
-                    // Search for existing instance
-                    _instance = (T)FindObjectOfType(typeof(T));
-
-                    // If cannot find, create one
-                    if (!_instance)
-                    {
-                        var singletonObject = new GameObject();
-                        _instance = singletonObject.AddComponent<T>();
-                        singletonObject.name = $"[SINGLETON] {typeof(T)}";
-                    }
+                    m_Instance = new GameObject(name, typeof(T)).GetComponent<T>();
+                    m_Instance.SingletonInit();
                 }
- 
-                return _instance;
             }
+            return m_Instance;
         }
     }
-    
-    /// <summary>
-    /// This function is called when the MonoBehaviour will be destroyed.
-    /// </summary>
-    void OnDestroy()
+
+    private static bool IsSingle()
     {
-        // _instance = null;
+        bool createdNew;
+        name = "Singleton of " + typeof(T).ToString();
+        mutex = new Mutex(false, name, out createdNew);
+        return createdNew;
+    }
+
+    private void Awake()
+    {
+        if (m_Instance == null)
+        {
+            if (IsSingle())
+            {
+                m_Instance = this as T;
+                m_Instance.SingletonInit();
+            }
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    private void OnDestory()
+    {
+        if (m_Instance != null)
+        {
+            mutex.ReleaseMutex();
+            SingletonDestroy();
+            m_Instance = null;
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        mutex.ReleaseMutex();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected virtual void SingletonInit()
+    {
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected virtual void SingletonDestroy()
+    {
+
     }
 }
