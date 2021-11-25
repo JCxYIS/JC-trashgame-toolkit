@@ -5,83 +5,63 @@ using System.Threading;
 
 /// <summary>
 /// 單實例模式
-/// ref: https://www.cnblogs.com/fastcam/p/5924036.html
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class MonoSingleton<T> : MonoBehaviour
-where T : MonoSingleton<T>
+public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-
-    private static T m_Instance = null;
-    private static string name;
-    private static Mutex mutex;
+    // Check to see if we're about to be destroyed.
+    private static bool m_ShuttingDown = false;
+    private static object m_Lock = new object();
+    private static T m_Instance;
+ 
+    /// <summary>
+    /// Access singleton instance through this propriety.
+    /// </summary>
     public static T Instance
     {
         get
         {
-            if (m_Instance == null)
+            if (m_ShuttingDown)
             {
-                if (IsSingle())
+                Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
+                    "' already destroyed. Returning null.");
+                return null;
+            }
+ 
+            lock (m_Lock)
+            {
+                if (m_Instance == null)
                 {
-                    m_Instance = new GameObject(name, typeof(T)).GetComponent<T>();
-                    m_Instance.SingletonInit();
+                    // Search for existing instance.
+                    m_Instance = (T)FindObjectOfType(typeof(T));
+ 
+                    // Create new instance if one doesn't already exist.
+                    if (m_Instance == null)
+                    {
+                        // Need to create a new GameObject to attach the singleton to.
+                        var singletonObject = new GameObject();
+                        m_Instance = singletonObject.AddComponent<T>();
+                        singletonObject.name = typeof(T).ToString() + " (Singleton)";
+ 
+                        // Make instance persistent.
+                        DontDestroyOnLoad(singletonObject);
+                    }
                 }
-            }
-            return m_Instance;
-        }
-    }
-
-    private static bool IsSingle()
-    {
-        bool createdNew;
-        name = "Singleton of " + typeof(T).ToString();
-        mutex = new Mutex(false, name, out createdNew);
-        return createdNew;
-    }
-
-    private void Awake()
-    {
-        if (m_Instance == null)
-        {
-            if (IsSingle())
-            {
-                m_Instance = this as T;
-                m_Instance.SingletonInit();
+ 
+                return m_Instance;
             }
         }
-        else
-        {
-            Destroy(this);
-        }
     }
-
-    private void OnDestory()
-    {
-        if (m_Instance != null)
-        {
-            mutex.ReleaseMutex();
-            SingletonDestroy();
-            m_Instance = null;
-        }
-    }
+ 
+ 
     private void OnApplicationQuit()
     {
-        mutex.ReleaseMutex();
+        m_ShuttingDown = true;
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected virtual void SingletonInit()
+ 
+ 
+    private void OnDestroy()
     {
-
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    protected virtual void SingletonDestroy()
-    {
-
+        //m_ShuttingDown = true;
     }
 }
