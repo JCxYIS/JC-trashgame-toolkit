@@ -74,7 +74,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     /// This function is called when the instance is used the first time
     /// Put all the initializations you need here, as you would do in Awake
     /// </summary>
-	public virtual void Init(){}
+	protected virtual void Init(){}
  
     /// Make sure the instance isn't referenced anymore when the user quit, just in case.
     private void OnApplicationQuit()
