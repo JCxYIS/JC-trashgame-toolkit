@@ -27,10 +27,10 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
                 // Object not found, we create a temporary one
                 if( m_Instance == null )
                 {
-  				Debug.LogWarning("No instance of " + typeof(T).ToString() + ", a temporary one is created.");
+  				Debug.Log("No instance of " + typeof(T).ToString() + ", one is created.");
 
 					isTemporaryInstance = true;
-                    m_Instance = new GameObject("Temp Instance of " + typeof(T).ToString(), typeof(T)).GetComponent<T>();
+                    m_Instance = new GameObject("[Instance] " + typeof(T).ToString(), typeof(T)).GetComponent<T>();
 
                     // Problem during the creation, this should not happen
                     if( m_Instance == null )
@@ -53,7 +53,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     // If no other monobehaviour request the instance in an awake function
     // executing before this one, no need to search the object.
-    private void Awake()
+    protected virtual void Awake()
     {
         if (m_Instance == null) {
 			m_Instance = this as T;
