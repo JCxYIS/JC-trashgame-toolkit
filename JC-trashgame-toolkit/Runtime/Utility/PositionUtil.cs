@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace JC.Utility
 {
-    public static class UIPosition
+    public static class PositionUtil
     {
         /// <summary>
         /// 世界座標轉 UGUI 座標
