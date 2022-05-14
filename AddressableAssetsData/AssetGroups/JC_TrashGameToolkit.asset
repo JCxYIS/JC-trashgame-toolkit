@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: JC_TrashGameToolkit
+  m_EditorClassIdentifier: 
+  m_GroupName: JC_TrashGameToolkit
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 3422e046fef401740a4adc9de5574f00
+  m_SerializeEntries:
+  - m_GUID: 2bfd7e533199a2e49a72baa929bd76fd
+    m_Address: PromptBox UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 669426728bb667e48b5cd6bb4ba71e21
+    m_Address: Loading UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 891795bd7c2b5054aa2756ec1bc1bd20, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 81988dbbb7e70a04782a22e23afd6b1c, type: 2}
+    - {fileID: 11400000, guid: a26b885fc40f27f4394400c71cc31cbd, type: 2}

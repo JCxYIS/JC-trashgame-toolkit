@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
-using JC.Utility;
+using UnityEngine.AddressableAssets;
 
 public class PromptBox : MonoBehaviour
 {
@@ -90,8 +90,9 @@ public class PromptBox : MonoBehaviour
     /// <param name="settings">PromptBoxSettings</param>
     public static void Create(PromptBoxSettings settings)
     {
-        GameObject g = ResourcesUtil.InstantiateFromResources("PromptBox UI");
-        g.GetComponent<PromptBox>().Show(settings);
+        Addressables.InstantiateAsync("PromptBox UI").Completed += res => {
+            res.Result.GetComponent<PromptBox>().Show(settings);
+        };
     }
 
     /// <summary>

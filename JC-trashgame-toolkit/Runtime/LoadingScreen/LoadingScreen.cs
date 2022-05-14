@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using JC.Utility;
 using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
 
 public class LoadingScreen : MonoBehaviour
 {
@@ -62,13 +63,17 @@ public class LoadingScreen : MonoBehaviour
 
     /* -------------------------------------------------------------------------- */
 
+    static bool loaded = false;
     private static void EnsureInstance()
     {
-        // if no instance created, create it!
-        if(!Instance)
+        // if no instance created, load & create it!
+        if(!loaded)
         {
-            Instance = ResourcesUtil.InstantiateFromResources("Loading UI").GetComponent<LoadingScreen>();
-            DontDestroyOnLoad(Instance.gameObject);
+            Addressables.InstantiateAsync("Loading UI").Completed += res => {
+                Instance = res.Result.GetComponent<LoadingScreen>();
+                DontDestroyOnLoad(Instance.gameObject);
+            };
+            loaded = true;
         }
     }
 
