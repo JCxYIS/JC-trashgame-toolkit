@@ -71,9 +71,3 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 {"mode":"full","isActive":false}
-
-# Log meta
-README.md.meta
-CHANGELOG.md.meta
-LICENSE.md.meta
-package.json.meta
