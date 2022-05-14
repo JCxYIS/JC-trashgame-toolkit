@@ -1,27 +1,27 @@
 {
-    "name": "com.jcxyis.jctrashgametoolkit",
-    "version": "1.0.1",
-    "displayName": "JC Trash Game Toolkit",
-    "description": "My unity toolbox, contains some convenient scripts or prefabs for instant use\n\n[(https://github.com/JCxYIS/JC-trashgame-toolkit)]\n\n![](https://i.imgur.com/FVM77ZR.png)",
-    "documentationUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/README.md",
-    "changelogUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/CHANGELOG.md",
-    "licensesUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/LICENSE.md",
-    "dependencies": {
-      "com.unity.addressables": "1.18.19"
-   },
-   "keywords": [
-      "haha"
-    ],
-    "samples": [
-        {
-            "displayName": "Samples",
-            "description": "Former JC trash Game Template",
-            "path": "JC-trashgame-toolkit/_Samples~"
-        }
-    ],
-    "author": {
-      "name": "JCxYIS",
-      "email": "jcxyis@g.ncu.edu.tw",
-      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  "name": "com.jcxyis.jctrashgametoolkit",
+  "version": "1.0.1",
+  "displayName": "JC Trash Game Toolkit",
+  "description": "My unity toolbox, contains some convenient scripts or prefabs for instant use\n\n[(https://github.com/JCxYIS/JC-trashgame-toolkit)]\n\n",
+  "documentationUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/README.md",
+  "changelogUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/CHANGELOG.md",
+  "licensesUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/LICENSE.md",
+  "dependencies": {
+    "com.unity.addressables": "1.18.19"
+  },
+  "keywords": [
+    "unity"
+  ],
+  "samples": [
+    {
+      "displayName": "Samples",
+      "description": "Former JC trash Game Template",
+      "path": "JC-trashgame-toolkit/_Samples~"
     }
+  ],
+  "author": {
+    "name": "JCxYIS",
+    "email": "jcxyis@g.ncu.edu.tw",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
   }
+}

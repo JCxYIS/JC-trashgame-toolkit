@@ -27,6 +27,8 @@ public class PromptBox : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /* -------------------------------------------------------------------------- */
+
 
     /// <summary>
     /// Display the prompt box
@@ -67,8 +69,11 @@ public class PromptBox : MonoBehaviour
     {
         gameObject.SetActive(false);
         Destroy(gameObject, 1);
+        Addressables.Release(gameObject);
     }
 
+
+    /* -------------------------------------------------------------------------- */
 
     public void OnConfirmButtonClick()
     {
