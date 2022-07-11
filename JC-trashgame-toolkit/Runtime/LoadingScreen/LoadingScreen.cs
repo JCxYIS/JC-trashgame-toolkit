@@ -5,6 +5,10 @@ using JC.Utility;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 
+/// <summary>
+/// Loading Screen
+/// Call SetProgress() to display
+/// </summary>
 public class LoadingScreen : MonoBehaviour
 {
     private static LoadingScreen Instance;
@@ -69,10 +73,9 @@ public class LoadingScreen : MonoBehaviour
         // if no instance created, load & create it!
         if(!loaded)
         {
-            Addressables.InstantiateAsync("Loading UI").Completed += res => {
-                Instance = res.Result.GetComponent<LoadingScreen>();
-                DontDestroyOnLoad(Instance.gameObject);
-            };
+            var g = Addressables.InstantiateAsync("Loading UI").WaitForCompletion();
+            Instance = g.GetComponent<LoadingScreen>();
+            DontDestroyOnLoad(Instance.gameObject);
             loaded = true;
         }
     }
@@ -81,9 +84,9 @@ public class LoadingScreen : MonoBehaviour
     /// <summary>
     /// Show a Loading screen
     /// </summary>
-    /// <param name="context">text to indicate what are you doing</param>
     /// <param name="progress">If progress >= 1, hide</param>
-    public static void SetProgress(string context, float progress)
+    /// <param name="context">text to indicate what are you doing</param>
+    public static void SetProgress(float progress, string context)
     {           
         // value check
         if(progress <= 0) 
@@ -103,7 +106,7 @@ public class LoadingScreen : MonoBehaviour
     /// <param name="progress">If progress >= 1, hide</param>
     public static void SetProgress(float progress)
     {
-        SetProgress(null, progress);
+        SetProgress(progress, null);
     }
 
     /// <summary>
