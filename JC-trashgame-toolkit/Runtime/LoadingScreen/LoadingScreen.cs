@@ -140,4 +140,19 @@ public class LoadingScreen : MonoBehaviour
         EnsureInstance();
         Instance.SetContextSelf(context);
     }
+
+
+    /// <summary>
+    /// return if the loading screen is showing 
+    /// /// </summary>
+    /// <value></value>
+    public static bool IsFullyShown
+    {
+        get
+        {
+            EnsureInstance();
+            return Instance._canvasGroup.alpha == 1;
+        }
+    }
+
 }

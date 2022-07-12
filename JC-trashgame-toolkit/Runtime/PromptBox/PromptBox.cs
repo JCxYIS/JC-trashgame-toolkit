@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine.AddressableAssets;
 
+/// <summary>
+/// Prompt box or Message box.
+/// Call CreateMessageBox() to display a simple message box,
+/// or Create() for manually setup.
+/// /// </summary>
 public class PromptBox : MonoBehaviour
 {
     [SerializeField] Text _titleText; 

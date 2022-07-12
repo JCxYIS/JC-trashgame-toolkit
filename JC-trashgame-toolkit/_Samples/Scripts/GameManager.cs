@@ -10,6 +10,10 @@ public class GameManager : MonoSingleton<GameManager>
     /* -------------------------------------------------------------------------- */
     Coroutine _goSceneCoroutine;
 
+    /// <summary>
+    /// Start Scene Transition
+    /// </summary>
+    /// <param name="sceneName"></param>
     public void GoScene(string sceneName)
     {
         if(_goSceneCoroutine == null)
@@ -24,13 +28,18 @@ public class GameManager : MonoSingleton<GameManager>
 
     IEnumerator GoSceneCoroutine(string sceneName)
     {
+        // do load
         var loadGame = SceneManager.LoadSceneAsync(sceneName);
-
-        //
+        loadGame.allowSceneActivation = false;
         while(!loadGame.isDone) 
         {
             LoadingScreen.SetContext("Loading...");
             LoadingScreen.SetProgress(loadGame.progress * 0.9f);  // capped to 0.9
+
+            if(LoadingScreen.IsFullyShown) // prevent scene is loaded faster than load screen faded in
+            {
+                loadGame.allowSceneActivation = true;
+            }
             yield return null;
         }
 
@@ -40,7 +49,7 @@ public class GameManager : MonoSingleton<GameManager>
         float demoWait = 1f;
         for(float t = 0; t < demoWait; t += Time.deltaTime)
         {
-            LoadingScreen.SetProgress(0.9f + t/demoWait*0.1f, $"Let's wait 3 seconds: {t.ToString("0.0")}/{demoWait}");
+            LoadingScreen.SetProgress(0.9f + t/demoWait*0.1f, $"Let's wait {demoWait} seconds: {t.ToString("0.0")}/{demoWait}");
             yield return null;
         }
 
