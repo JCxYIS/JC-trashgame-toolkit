@@ -26,4 +26,6 @@ public class PromptBoxSettings
     /// Set to "" (empty string) will hide the cancel button
     /// </summary>
     public string CancelButtonText = "取消";
+
+    public bool CanUseEscToCancel = true;
 }

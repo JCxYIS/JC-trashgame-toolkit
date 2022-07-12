@@ -32,6 +32,17 @@ public class PromptBox : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    void Update()
+    {
+        if(_settings.CanUseEscToCancel)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                Hide();
+            }
+        }
+    }
+
     /* -------------------------------------------------------------------------- */
 
 
@@ -40,6 +51,25 @@ public class PromptBox : MonoBehaviour
     /// </summary>
     /// <param name="settings"></param>
     public void Show(PromptBoxSettings settings)
+    {
+        RefreshSettings(settings);
+        
+        // on
+        gameObject.SetActive(true);
+    }  
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+        Destroy(gameObject, 1);
+        Addressables.Release(gameObject);
+    }
+
+    /// <summary>
+    /// Display the prompt box
+    /// </summary>
+    /// <param name="settings"></param>
+    public void RefreshSettings(PromptBoxSettings settings)
     {
         _settings = settings;
 
@@ -54,8 +84,15 @@ public class PromptBox : MonoBehaviour
         _cancelButton.onClick.AddListener(OnCancelButtonClick);
 
         // Button Texts
-        Text confirmButtText = _confirmButton.transform.GetChild(0).GetComponent<Text>();
-        confirmButtText.text = _settings.ConfirmButtonText;
+        if(_settings.ConfirmButtonText == "")
+        {
+            _confirmButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            Text confirmButtText = _confirmButton.transform.GetChild(0).GetComponent<Text>();
+            confirmButtText.text = _settings.ConfirmButtonText;
+        }
         if(_settings.CancelButtonText == "")
         {
             _cancelButton.gameObject.SetActive(false);
@@ -66,15 +103,9 @@ public class PromptBox : MonoBehaviour
             cancelButtText.text = _settings.CancelButtonText;
         }
         
-        // on
-        gameObject.SetActive(true);
-    }  
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
-        Destroy(gameObject, 1);
-        Addressables.Release(gameObject);
+        // sfx
+        //  = _settings.ShowSfx;        
+        //  = _settings.ButtonSfx;        
     }
 
 
@@ -100,9 +131,9 @@ public class PromptBox : MonoBehaviour
     /// <param name="settings">PromptBoxSettings</param>
     public static void Create(PromptBoxSettings settings)
     {
-        Addressables.InstantiateAsync("PromptBox UI").Completed += res => {
-            res.Result.GetComponent<PromptBox>().Show(settings);
-        };
+        var g = Addressables.InstantiateAsync("PromptBox UI").WaitForCompletion();
+        PromptBox promptBox = g.GetComponent<PromptBox>();
+        promptBox.Show(settings);
     }
 
     /// <summary>
@@ -112,10 +143,12 @@ public class PromptBox : MonoBehaviour
     /// <param name="callback"></param>
     public static void CreateMessageBox(string message, UnityAction callback = null)
     {
+        print($"<color=green>[MSG BOX]" + (callback==null?"":"(with callback)") + $"</color> {message}");
         Create(new PromptBoxSettings{
             Content = message,
             ConfirmCallback = callback,
-            CancelButtonText = ""
+            CancelButtonText = "",
+            CanUseEscToCancel = callback == null,
         });
     }
 }
