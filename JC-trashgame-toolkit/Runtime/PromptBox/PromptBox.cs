@@ -10,7 +10,7 @@ using UnityEngine.AddressableAssets;
 /// Call CreateMessageBox() to display a simple message box,
 /// or Create() for manually setup.
 /// /// </summary>
-public class PromptBox : MonoBehaviour
+public class PromptBox : PopUI
 {
     [SerializeField] Text _titleText; 
     [SerializeField] Text _contentText; 
@@ -27,12 +27,13 @@ public class PromptBox : MonoBehaviour
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
         gameObject.SetActive(false);
+        base.Awake();
     }
 
-    void Update()
+    protected override void Update()
     {
         if(_settings.CanUseEscToCancel)
         {
@@ -55,14 +56,21 @@ public class PromptBox : MonoBehaviour
         RefreshSettings(settings);
         
         // on
-        gameObject.SetActive(true);
-    }  
+        // gameObject.SetActive(true);
+        base.Show();
+    }
 
-    public void Hide()
+    public override void Show()
     {
-        gameObject.SetActive(false);
-        Destroy(gameObject, 1);
-        Addressables.Release(gameObject);
+        throw new System.NotSupportedException("Use Show(PromptBoxSettings) instead");
+    }
+
+    public override void Hide()
+    {
+        // gameObject.SetActive(false);
+        // Destroy(gameObject, 1);
+        // Addressables.Release(gameObject);
+        base.Hide();
     }
 
     /// <summary>

@@ -4,14 +4,19 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.UI;
 
+/// <summary>
+/// Pop up Panel
+/// You can inherit this class to create your own pop up panel. 
+/// Notice in case that you need to use Awake() or Update(), use protected override void, and remember to call base.Awake()
+/// </summary>
 public class PopUI : MonoBehaviour
 {
-    [Header("Popup UI Settings")]
+    [Header("Pop UI Settings")]
     public bool ShowOnAwake = false;
     public float AnimDuration = 0.48763f;    
-    [SerializeField, Header("後面的陰影，會自動加上觸碰以關閉的按紐")] Image _bgImage;
-    [SerializeField, Header("此 Panel 的 container")] Transform _mainContainer;
-    [SerializeField] protected bool _playSfx = true;
+    [SerializeField, Tooltip("後面的陰影，會自動加上觸碰以關閉的按紐")] Image _bgImage;
+    [SerializeField, Tooltip("此 Panel 的 container")] Transform _mainContainer;
+    // [SerializeField] protected bool _playSfx = true;
     [SerializeField] protected bool _destroyOnHide = true;
     
     Color bgImage_initColor;
@@ -80,7 +85,7 @@ public class PopUI : MonoBehaviour
         // block "hide command when show animation is playing"
         if(Time.time - startShowingTime < AnimDuration)
         {
-            Debug.Log("還在跑彈出動畫，你有點太快了");
+            Debug.Log("[PopUI] 還在跑彈出動畫，太快了");
             _mainContainer.DOKill();
         }
 
