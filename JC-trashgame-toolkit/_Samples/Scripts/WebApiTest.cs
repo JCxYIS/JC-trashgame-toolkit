@@ -32,9 +32,9 @@ public class WebApiTest : MonoBehaviour
             {
                 _responseText.text = 
                     "GET From URL=" + url + "\n"  +
-                    "Name: " + data.data.first_name + " " + data.data.last_name + "\n" + 
-                    "Email: " + data.data.email + "\n" +
-                    "Avatar: " + data.data.avatar;
+                    "Name: " + data.first_name + " " + data.last_name + "\n" + 
+                    "Email: " + data.email + "\n" +
+                    "Avatar: " + data.avatar;
             }
             else
             {
@@ -51,33 +51,34 @@ public class WebApiTest : MonoBehaviour
 
     void GetList()
     {
-        var result = JsonUtility.FromJson<ReqresUser[]>(testJsonArr);
-        foreach (var item in result)
+        WebApiHelper.CallApi<List<ReqresUser>>("GET", "https://reqres.in/api/users", (succ, msg, data)=>
         {
-            Debug.Log(item.data.avatar);
-        }
+            if (succ)
+            {
+                _responseText.text = "Total: " + data.Count + "\n";
+                foreach (var user in data)
+                {
+                    _responseText.text += 
+                        user.first_name + " " + user.last_name + "\n";
+                }
+            }
+            else
+            {
+                PromptBox.CreateMessageBox("Error: "+msg);
+            }
+        });        
     }
 
     void Post()
     {
-
+        PromptBox.CreateMessageBox("TODO");
     }
 
 
     /* -------------------------------------------------------------------------- */
 
-    string testJson = @"{ ""data"": { ""id"": 1, ""email"": ""george.bluth@reqres.in"", ""first_name"": ""George"", ""last_name"": ""Bluth"", ""avatar"": ""https://reqres.in/img/faces/1-image.jpg"" }, ""support"": { ""url"": ""https://reqres.in/#support-heading"", ""text"": ""To keep ReqRes free, contributions towards server costs are appreciated!"" } }";   
-    string testJsonArr = @"[ { ""id"": 1, ""email"": ""george.bluth@reqres.in"", ""first_name"": ""George"", ""last_name"": ""Bluth"", ""avatar"": ""https://reqres.in/img/faces/1-image.jpg"" }, { ""id"": 2, ""email"": ""janet.weaver@reqres.in"", ""first_name"": ""Janet"", ""last_name"": ""Weaver"", ""avatar"": ""https://reqres.in/img/faces/2-image.jpg"" }, { ""id"": 3, ""email"": ""emma.wong@reqres.in"", ""first_name"": ""Emma"", ""last_name"": ""Wong"", ""avatar"": ""https://reqres.in/img/faces/3-image.jpg"" } ]";   
-
     [System.Serializable]
     public class ReqresUser
-    {
-        public ReqresUserData data;  // strong typing
-        public dynamic support;  // dynamic typing (check project setting, .Net version need to set to 4.X, and backend should only be mono)
-    } 
-
-    [System.Serializable]
-    public class ReqresUserData
     {
         public int id;
         public string email;

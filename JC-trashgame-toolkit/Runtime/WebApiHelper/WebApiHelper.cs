@@ -6,6 +6,7 @@ using System;
 using UnityEngine.Networking;
 using System.IO;
 using UnityEngine.AddressableAssets;
+using LitJson;
 
 /// <summary>
 /// Web api handler
@@ -23,7 +24,7 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
     /// 有沒有使用 ApiResponseModel (見最底下) 包裝資料
     /// 如果是 false，那 CallApi 回傳的 msg 就是空的
     /// </summary>
-    private static bool USE_API_RESPONSE_MODEL = false;
+    private static bool USE_API_RESPONSE_MODEL = true;
 
 
     // runtime
@@ -154,14 +155,14 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
         {
             if(USE_API_RESPONSE_MODEL)
             {
-                ApiResonpseModel resultModel = JsonUtility.FromJson<ApiResonpseModel>(www.downloadHandler.text);            
-                returnData = (T)resultModel.data;            
-                isSuccess = resultModel.isSuccess;
-                msg = resultModel.message;
+                ApiResponseModel<T> resultModel = JsonMapper.ToObject<ApiResponseModel<T>>(www.downloadHandler.text);  
+                returnData = resultModel.data;  
+                isSuccess = true;  // isSuccess = resultModel.isSuccess;
+                // msg = resultModel.message;
             }
             else
             {
-                returnData = JsonUtility.FromJson<T>(www.downloadHandler.text);
+                returnData = JsonMapper.ToObject<T>(www.downloadHandler.text);
                 isSuccess = true;
             }
         }
@@ -174,8 +175,8 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
             }
             else
             {
-                Debug.LogError($"[WebAPI] Parse response Error: [{www.url}] ERR={e}");
-                msg = "解析資料發生錯誤 (Err)";
+                Debug.LogError(e);
+                msg = "解析資料發生錯誤";
             }
             returnData = default(T);
         }
@@ -185,7 +186,7 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
             (isSuccess ? "<color=green>Success</color>" : "<color=red>Failed</color>") + 
             $"({www.responseCode}) " +
             $"{msg}"
-            // + $"\n{www.downloadHandler.text}"
+            + $"\n{www.downloadHandler.text}"
             + $"\n{returnData}"
         );
 
@@ -199,10 +200,11 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
     /// <summary>
     /// 如果有使用自定義的 API Response Model 可以在這裡指定
     /// </summary>
-    private class ApiResonpseModel
+    [Serializable]
+    private class ApiResponseModel<T>
     {
-        public bool isSuccess {get; set;}
-        public string message {get; set;}
-        public object data {get; set;}
+        // public bool isSuccess {get; set;}
+        // public string message {get; set;}
+        public T data {get; set;}
     }
 }
