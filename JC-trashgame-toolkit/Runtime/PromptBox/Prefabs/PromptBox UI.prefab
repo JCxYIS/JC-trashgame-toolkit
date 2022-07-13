@@ -753,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2ac52dc639330044b6ceb52cb934239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowOnAwake: 1
+  ShowOnAwake: 0
   AnimDuration: 0.48763
   _bgImage: {fileID: 1433207261935101815}
   _mainContainer: {fileID: 839082077472968837}
