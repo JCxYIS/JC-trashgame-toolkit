@@ -15,13 +15,13 @@ public static class ListExtension
     }
 
     /// <summary>
-    /// Draw N random elements from a list
+    /// Draw N random elements from a list, with repeat
     /// </summary>
     /// <param name="list"></param>
     /// <param name="itemsToDraw">draw how many items? (N)</param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static List<T> RandomN<T>(this List<T> list, int itemsToDraw)
+    public static List<T> RandomN<T>(this List<T> list, int itemsToDraw, bool repeat = false)
     {
         // The copy of the original list, we will remove the element we pick out
         List<T> sourceList = new List<T>(list);
@@ -32,7 +32,8 @@ public static class ListExtension
         {
             int index = UnityEngine.Random.Range(0, sourceList.Count);
             targetList.Add(sourceList[index]);
-            sourceList.RemoveAt(index);
+            if(!repeat)
+                sourceList.RemoveAt(index);
         }
 
         return targetList;
