@@ -186,8 +186,8 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
             (isSuccess ? "<color=green>Success</color>" : "<color=red>Failed</color>") + 
             $"({www.responseCode}) " +
             $"{msg}"
-            + $"\n{www.downloadHandler.text}"
-            + $"\n{returnData}"
+            // + $"\n{www.downloadHandler.text}"
+            // + $"\n{returnData}"
         );
 
         callback?.Invoke(isSuccess, msg, returnData);        
