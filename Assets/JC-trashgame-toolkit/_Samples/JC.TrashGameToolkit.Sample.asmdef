@@ -3,7 +3,8 @@
     "rootNamespace": "JC.TrashGameToolkit.Sample",
     "references": [
         "GUID:4eb97968a22dc194ea9df580dc4d804a",
-        "GUID:91e150b55a0f67d43a504bb35cfacd6a"
+        "GUID:91e150b55a0f67d43a504bb35cfacd6a",
+        "GUID:600534852e4cdc04bb657194f53fd50e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
