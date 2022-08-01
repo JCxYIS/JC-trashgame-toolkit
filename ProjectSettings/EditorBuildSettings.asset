@@ -10,6 +10,6 @@ EditorBuildSettings:
     guid: 445262380ee5ac04d8d2c75861457e3f
   - enabled: 1
     path: Assets/JC-trashgame-toolkit/_Samples/JC_Main.unity
-    guid: 0bc1cbabe64c7e74d8cc7b52aa9938a2
+    guid: 1fc6faa43e37a0742b7056a2ac0ed791
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 79f120980cef6ef47bf0d177de1e9aa6, type: 2}
