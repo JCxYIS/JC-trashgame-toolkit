@@ -187,6 +187,7 @@ MonoBehaviour:
   behavior: +3
   gradient: {fileID: 7555895613188068566}
   text: {fileID: 7555895614627590987}
+  stageController: {fileID: 0}
 --- !u!1 &7555895613366533599
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,10 +396,10 @@ RectTransform:
   m_Father: {fileID: 7555895613547903312}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.000022888184, y: 3.1368651}
-  m_SizeDelta: {x: 0.32400036, y: 6.2738}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 3.1368651}
+  m_SizeDelta: {x: 9, y: 6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7555895613954804004
 CanvasRenderer:
@@ -432,16 +433,16 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 3
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 0
+    m_MaxSize: 3
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: x1
+  m_Text: +1
 --- !u!1 &7555895614293582541
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,10 +609,10 @@ RectTransform:
   m_Father: {fileID: 7555895614531673499}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.000022888184, y: 3.1368651}
-  m_SizeDelta: {x: 0.32400036, y: 6.2738}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 3.1368651}
+  m_SizeDelta: {x: 9, y: 6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7555895614627590980
 CanvasRenderer:
@@ -645,16 +646,16 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 3
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 0
+    m_MaxSize: 3
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: x1
+  m_Text: +1
 --- !u!1 &7555895614794116982
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,6 +863,7 @@ MonoBehaviour:
   behavior: +3
   gradient: {fileID: 7555895613366533593}
   text: {fileID: 7555895613954804011}
+  stageController: {fileID: 0}
 --- !u!1 &7555895615174591013
 GameObject:
   m_ObjectHideFlags: 0

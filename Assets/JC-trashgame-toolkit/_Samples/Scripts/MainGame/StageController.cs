@@ -7,12 +7,27 @@ namespace JC.TrashGameToolkit.Sample
 {
     public class StageController : MonoBehaviour
     {
+        [Header("Bindings")]
         public GameObject _stagePrefab;
+
+        [Header("Settings")]
         public Vector3 _firstStagePosition;
         public float _stageLength;
+        
+        // [Header("Questions")]
+        // public List<string> _questions;
+        Player _player;
 
         private Queue<GameObject> _stages = new Queue<GameObject>();
         int _stageNo = 0;
+
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        void Awake()
+        {
+            _player = FindObjectOfType<Player>();
+        }
 
         /// <summary>
         /// Start is called on the frame when a script is enabled just before
@@ -20,9 +35,15 @@ namespace JC.TrashGameToolkit.Sample
         /// </summary>
         void Start()
         {
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < 3; i++)
             {
                 CreateNextStage();
+            }
+
+            for(int i = 0; i < 30; i++)
+            {
+                string q = MathUtil.MakeMath(5);
+                print(q);
             }
         }
 
@@ -35,13 +56,36 @@ namespace JC.TrashGameToolkit.Sample
             stage.transform.position = _firstStagePosition + Vector3.forward * _stageLength * _stageNo;
             _stages.Enqueue(stage);
 
-            // Set walls
-            var walls = stage.GetComponentsInChildren<Wall>();
-            foreach(var wall in walls)
+            // Make math questions
+            List<string> questions = new List<string>();
+            Wall[] walls = stage.GetComponentsInChildren<Wall>();
+            int playerScore = _player.score;
+            for(int i = 0; i < walls.Length; i++)
             {
-                wall.stageController = this;
-                wall.behavior = Random.value > 0.5f ? "+"+Random.Range(1, 5) : "-"+Random.Range(1, 5);
+                for(int attempt = 0; attempt < 10; attempt++) // attempt to make questions
+                {
+                    string q = MathUtil.MakeMath(playerScore / 10 + 1);
+                    double delta = MathUtil.DoMath(playerScore + q) - playerScore;
+                    if(
+                        (i == 0 && delta > 0 && delta < 50)|| // first wall must be good, but not too much
+                        (i != 0 && delta < 0)    // other walls must be bad
+                        )
+                    {
+                        questions.Add(q);
+                        walls[i].SetBehavior(q);
+                        break;
+                    }
+                }
+            }
+            questions.Shuffle();
+
+            // Set walls
+            for(int i = 0; i < walls.Length; i++)
+            {
+                walls[i].stageController = this;
+                walls[i].behavior = questions[i];
             }
         }
+        
     }
 }

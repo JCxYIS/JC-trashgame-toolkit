@@ -28,6 +28,11 @@ namespace JC.TrashGameToolkit.Sample
             text.text = behavior;
         }
 
+        public void SetBehavior(string behavior)
+        {
+            this.behavior = behavior;
+        }
+
         public void OnTrigger(bool isGoodForPlayer)
         {
             gradient.DOColor(isGoodForPlayer ? Color.green : Color.red, 0.25f).SetLoops(2, LoopType.Yoyo);
