@@ -2,10 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GoSceneFunctionContainer : MonoBehaviour
+namespace JC.TrashGameToolkit.Sample
 {
-    public void GoScene(string sceneName)
+
+    public class GoSceneFunctionContainer : MonoBehaviour
     {
-        GameManager.Instance.GoScene(sceneName);
+        public void GoScene(string sceneName)
+        {
+            GameManager.Instance.GoScene(sceneName);
+        }
     }
 }

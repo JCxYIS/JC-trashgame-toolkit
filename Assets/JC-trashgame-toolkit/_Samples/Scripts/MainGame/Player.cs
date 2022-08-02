@@ -74,7 +74,7 @@ namespace JC.TrashGameToolkit.Sample
                 if(result <= 0)
                 {
                     print("GG");
-                    Destroy(gameObject);
+                    gameObject.SetActive(false);
                 }      
 
                 // 

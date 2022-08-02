@@ -16,6 +16,7 @@ namespace JC.TrashGameToolkit.Sample
         // Start is called before the first frame update
         void Start()
         {
+            _scoreText.text = "1";
             _scoreDeltaText.gameObject.SetActive(false);
         }
 
@@ -33,6 +34,7 @@ namespace JC.TrashGameToolkit.Sample
             delta.GetComponent<Text>().text = scoreDelta >= 0 ? "+"+scoreDelta : scoreDelta.ToString();
             delta.GetComponent<Text>().DOFade(0, .2f).SetDelay(.3f);
             delta.GetComponent<RectTransform>().DOAnchorPosY(-75, .5f);
+            Destroy(delta, 2);
         }
     }
 }
