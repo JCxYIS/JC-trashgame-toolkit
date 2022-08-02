@@ -35,24 +35,30 @@ namespace JC.TrashGameToolkit.Sample
         /// </summary>
         void Start()
         {
-            for(int i = 0; i < 3; i++)
+            for(int i = 0; i < 2; i++)
             {
                 CreateNextStage();
             }
 
-            for(int i = 0; i < 30; i++)
-            {
-                string q = MathUtil.MakeMath(5);
-                print(q);
-            }
+            // TEST MATH
+            // for(int i = 0; i < 30; i++)
+            // {
+            //     string q = "3" + MathUtil.MakeMath(3);
+            //     double a = MathUtil.DoMath(q);
+            //     print($"{q} = {a}");
+            // }
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentStageIndex">To confirm</param>
         public void CreateNextStage()
         {
             _stageNo++;
 
             // Create Stage
-            GameObject stage = _stages.Count > 5 ? _stages.Dequeue() : Instantiate(_stagePrefab, transform.position, Quaternion.identity);
+            GameObject stage = _stages.Count > 4 ? _stages.Dequeue() : Instantiate(_stagePrefab, transform.position, Quaternion.identity);
             stage.transform.position = _firstStagePosition + Vector3.forward * _stageLength * _stageNo;
             _stages.Enqueue(stage);
 
@@ -67,7 +73,7 @@ namespace JC.TrashGameToolkit.Sample
                     string q = MathUtil.MakeMath(playerScore / 10 + 1);
                     double delta = MathUtil.DoMath(playerScore + q) - playerScore;
                     if(
-                        (i == 0 && delta > 0 && delta < 50)|| // first wall must be good, but not too much
+                        (i == 0 && delta > 0 && delta < 30)|| // first wall must be good, but not too much
                         (i != 0 && delta < 0)    // other walls must be bad
                         )
                     {
