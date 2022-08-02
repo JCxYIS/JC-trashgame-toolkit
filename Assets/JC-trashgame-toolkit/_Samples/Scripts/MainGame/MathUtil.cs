@@ -101,15 +101,20 @@ namespace JC.TrashGameToolkit.Sample
                         exp += UnityEngine.Random.Range(0, 5);
                         break;
                     case "×":
-                    case "÷":
                     case "(":
                         exp += UnityEngine.Random.Range(0, 3);
+                        break;
+                    case "÷":
+                        exp += UnityEngine.Random.Range(1, 4);
                         break;
                     default:
                         // throw new Exception("Error opResult " + opResult[i]);
                         break;
                 }
             }
+
+            // fixme
+            exp.Replace(")(", ")×(");
 
             return exp;
         }

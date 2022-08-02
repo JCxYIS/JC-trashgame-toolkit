@@ -9,11 +9,22 @@ namespace JC.TrashGameToolkit.Sample
     public class Player : MonoBehaviour
     {
         [Header("Bindings")]
-        public int score = 1;
         public GameObject allyPrefab;
+        public MainUI ui;
 
         [Header("Runtime")]
+        public int score = 1;
+        public float survivalTime = 0;
+        public int wallPassed = 0;
         [ReadOnly][SerializeField] private List<GameObject> allies = new List<GameObject>();
+
+        /// <summary>
+        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        void Update()
+        {
+            survivalTime += Time.deltaTime;
+        }
 
         /// <summary>
         /// OnTriggerEnter is called when the Collider other enters the trigger.
@@ -68,7 +79,8 @@ namespace JC.TrashGameToolkit.Sample
 
                 // 
                 score = result;
-                wall.OnTrigger(delta > 0);          
+                wall.OnTrigger(delta > 0);    
+                ui.SetScore(score, delta);
             }
         }
 
