@@ -14,16 +14,17 @@ namespace JC.TrashGameToolkit.Sample
 
         [Header("Runtime")]
         public int score = 1;
-        public float survivalTime = 0;
-        public int wallPassed = 0;
+        [ReadOnly] public GameScore gameScore;
         [ReadOnly][SerializeField] private List<GameObject> allies = new List<GameObject>();
 
+
         /// <summary>
-        /// Update is called every frame, if the MonoBehaviour is enabled.
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
         /// </summary>
-        void Update()
+        void Start()
         {
-            survivalTime += Time.deltaTime;
+            gameScore = new GameScore();
         }
 
         /// <summary>
@@ -44,10 +45,10 @@ namespace JC.TrashGameToolkit.Sample
                 exp = score + exp;
 
                 // Do the math plz
-                var resultRaw = MathUtil.DoMath(exp);
-                int result = (int)Math.Round(resultRaw);
-                int delta = result - score;
-                print($"{exp} = {result} ({resultRaw})");
+                var newScoreRaw = MathUtil.DoMath(exp);
+                int newScore = (int)Math.Round(newScoreRaw);
+                int delta = newScore - score;
+                print($"{exp} = {newScore} [{newScoreRaw}]");
                                
                 // Apply score
                 if(delta > 0)
@@ -68,19 +69,21 @@ namespace JC.TrashGameToolkit.Sample
                         Destroy(allies[0]);
                         allies.RemoveAt(0);
                     }
-                } 
+                }                     
 
-                // GG
-                if(result <= 0)
-                {
-                    print("GG");
-                    gameObject.SetActive(false);
-                }      
-
-                // 
-                score = result;
+                // Invoke Event
+                gameScore.PassedGate(score, wall.behavior, newScore);
+                score = newScore;
                 wall.OnTrigger(delta > 0);    
                 ui.SetScore(score, delta);
+
+                // GG
+                if(newScore <= 0)
+                {
+                    print("GG");
+                    GameManager.Instance.GameOver(gameScore);
+                    gameObject.SetActive(false);
+                }  
             }
         }
 

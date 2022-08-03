@@ -66,11 +66,17 @@ namespace JC.TrashGameToolkit.Sample
             List<string> questions = new List<string>();
             Wall[] walls = stage.GetComponentsInChildren<Wall>();
             int playerScore = _player.score;
+            int complexity = playerScore / 10 + 1;
+            if(complexity <= 0)
+            {
+                Debug.LogWarning("Complexity <= 0 is invalid, player should be GGed");
+                return;
+            }
             for(int i = 0; i < walls.Length; i++)
             {
                 for(int attempt = 0; attempt < 10; attempt++) // attempt to make questions
                 {
-                    string q = MathUtil.MakeMath(playerScore / 10 + 1);
+                    string q = MathUtil.MakeMath(complexity);
                     double delta = MathUtil.DoMath(playerScore + q) - playerScore;
                     if(
                         (i == 0 && delta > 0 && delta < 30)|| // first wall must be good, but not too much

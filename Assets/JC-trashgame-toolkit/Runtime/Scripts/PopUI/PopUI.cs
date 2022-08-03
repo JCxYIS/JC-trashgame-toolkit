@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 /// <summary>
 /// Pop up Panel
@@ -12,15 +13,38 @@ using UnityEngine.UI;
 public class PopUI : MonoBehaviour
 {
     [Header("Pop UI Settings")]
-    public bool ShowOnAwake = false;
-    public float AnimDuration = 0.48763f;    
-    [SerializeField, Tooltip("後面的陰影，會自動加上觸碰以關閉的按紐")] Image _bgImage;
-    [SerializeField, Tooltip("此 Panel 的 container")] Transform _mainContainer;
-    // [SerializeField] protected bool _playSfx = true;
-    [SerializeField] protected bool _destroyOnHide = true;
+
+    [SerializeField, Tooltip("")] 
+    protected bool _showOnAwake = false;
+
+    [SerializeField, Tooltip("")] 
+    protected float _animDuration = 0.48763f;  
+
+    [SerializeField, Tooltip("(Optional) 後面的陰影，會自動加上觸碰以關閉的按紐")]
+    protected Image _bgImage;
+
+    [SerializeField, Tooltip("此 Panel 的 container")] 
+    protected Transform _mainContainer;
+
+    // [SerializeField] 
+    // protected bool _playSfx = true;
     
+    [SerializeField, Tooltip("Destroy when Hide() is called")] 
+    protected bool _destroyOnHide = true;
+
+    [SerializeField, Tooltip("Hide when esc is hit")] 
+    protected bool _hideOnEscClicked = true;
+
+    /* -------------------------------------------------------------------------- */
+    // Events
+    protected UnityAction OnShowAnimFinished;
+
+    /* -------------------------------------------------------------------------- */
+    // Runtime params
     Color bgImage_initColor;
-    float startShowingTime; // to block "hide command when show animation is playing"
+    bool isShowAnimFinished; // to block "hide command when show animation is playing"
+
+    /* -------------------------------------------------------------------------- */
 
 
     /// <summary>
@@ -28,13 +52,15 @@ public class PopUI : MonoBehaviour
     /// </summary>
     protected virtual void Awake()
     {
-        _mainContainer.transform.localScale = Vector3.zero;
-        bgImage_initColor = _bgImage.color;
-        _bgImage.color = Color.clear;
+        _mainContainer.transform.localScale = Vector3.zero;        
 
         // add hide function to bgImage
         if(_bgImage)
         {
+            bgImage_initColor = _bgImage.color;
+            _bgImage.color = Color.clear;
+            _bgImage.raycastTarget = true;
+
             Button hideBtn = _bgImage.GetComponent<Button>();
             if(!hideBtn)
             {
@@ -45,27 +71,42 @@ public class PopUI : MonoBehaviour
         }        
 
         // gameObject.SetActive(false);
-
-        if(ShowOnAwake)
+        if(_showOnAwake)
             Show();
+
+        StartCoroutine(UpdateCoroutine());
     }
 
-    protected virtual void Update()
+    private IEnumerator UpdateCoroutine()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        while(true)
         {
-            Hide();
+            if(_hideOnEscClicked && Input.GetKeyDown(KeyCode.Escape))
+            {
+                Hide();
+            }
+
+            yield return null;
         }
     }
+
 
     public virtual void Show()
     {
         gameObject.SetActive(true);
-        _mainContainer.transform.DOScale(Vector3.one, AnimDuration).SetEase(Ease.OutBack);
+        isShowAnimFinished = false;
+        _mainContainer.transform.DOScale(Vector3.one, _animDuration)
+            .SetEase(Ease.OutBack)
+            .OnComplete(()=>
+            {
+                isShowAnimFinished = true;
+                if(OnShowAnimFinished != null)
+                    OnShowAnimFinished();
+            });
         
         if(_bgImage)
         {
-            _bgImage.DOColor(bgImage_initColor, AnimDuration);
+            _bgImage.DOColor(bgImage_initColor, _animDuration);
         }
 
         // lower music vol
@@ -77,19 +118,20 @@ public class PopUI : MonoBehaviour
         //         MusicControllerJc.Instance.PlaySfx(MusicControllerJc.SfxType.Confirm);
         // }
 
-        startShowingTime = Time.time;
     }
 
     public virtual void Hide()
     {
         // block "hide command when show animation is playing"
-        if(Time.time - startShowingTime < AnimDuration)
+        if(!isShowAnimFinished)
         {
-            Debug.Log("[PopUI] 還在跑彈出動畫，太快了");
+            Debug.Log("[PopUI] Too fast to hide (Still playing show animation)");
             _mainContainer.DOKill();
+            _bgImage.DOKill();
+            isShowAnimFinished = true;
         }
 
-         _mainContainer.transform.DOScale(Vector3.zero, AnimDuration/2f).SetEase(Ease.InCubic)
+         _mainContainer.transform.DOScale(Vector3.zero, _animDuration/2f).SetEase(Ease.InCubic)
          .onComplete += ()=>{
             // Destroy on hide
             if(_destroyOnHide)
@@ -99,7 +141,7 @@ public class PopUI : MonoBehaviour
         
         if(_bgImage)
         {
-            _bgImage.DOColor(Color.clear, AnimDuration/2f);
+            _bgImage.DOColor(Color.clear, _animDuration/2f);
         }
 
         // music and input

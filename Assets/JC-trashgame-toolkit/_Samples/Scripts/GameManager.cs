@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
 
 namespace JC.TrashGameToolkit.Sample
 {
@@ -68,6 +69,8 @@ namespace JC.TrashGameToolkit.Sample
         {
             // Score = score;
             // GoScene("JC_Result");
+            var g = Addressables.InstantiateAsync("Sample_ResultPanel UI").WaitForCompletion();
+            g.GetComponent<ResultUI>().Show(score);
         }
     }
 }

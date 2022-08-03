@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Loading UI
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 6d2c68fb0e14479429f4fed2e7a0aea9
+    m_Address: Sample_ResultPanel UI
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 891795bd7c2b5054aa2756ec1bc1bd20, type: 2}
   m_SchemaSet:

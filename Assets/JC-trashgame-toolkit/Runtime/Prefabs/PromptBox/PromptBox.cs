@@ -29,19 +29,8 @@ public class PromptBox : PopUI
     /// </summary>
     protected override void Awake()
     {
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);        
         base.Awake();
-    }
-
-    protected override void Update()
-    {
-        if(_settings.CanUseEscToCancel)
-        {
-            if(Input.GetKeyDown(KeyCode.Escape))
-            {
-                Hide();
-            }
-        }
     }
 
     /* -------------------------------------------------------------------------- */
@@ -113,7 +102,10 @@ public class PromptBox : PopUI
         
         // sfx
         //  = _settings.ShowSfx;        
-        //  = _settings.ButtonSfx;        
+        //  = _settings.ButtonSfx;    
+
+        // 
+        _hideOnEscClicked = _settings.CanUseEscToCancel;    
     }
 
 
