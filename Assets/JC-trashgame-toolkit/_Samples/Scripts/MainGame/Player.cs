@@ -76,9 +76,9 @@ namespace JC.TrashGameToolkit.Sample
                 // Invoke Event
                 gameScore.PassedGate(score, wall.behavior, newScore);
                 score = newScore;
-                wall.OnTrigger(delta > 0);    
                 ui.SetScore(score, delta);
                 PlayerController.SpeedBoost += 0.0148763f;
+                wall.OnTrigger(delta > 0);    
 
                 // GG
                 if(newScore <= 0)

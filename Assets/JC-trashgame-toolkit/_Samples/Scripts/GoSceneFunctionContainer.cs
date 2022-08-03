@@ -9,7 +9,7 @@ namespace JC.TrashGameToolkit.Sample
     {
         public void GoScene(string sceneName)
         {
-            GameManager.Instance.GoScene(sceneName);
+            GameManager.Instance.GoScene(sceneName/*, true*/);
         }
     }
 }
