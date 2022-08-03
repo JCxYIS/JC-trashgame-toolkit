@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace JC.TrashGameToolkit.Sample
 {
+    // ripped code from my another project (freshweb20
     public class PlayerController : MonoBehaviour
     {
         private const float PLAYER_SPEED =  20.0f;
@@ -15,6 +16,8 @@ namespace JC.TrashGameToolkit.Sample
         private Vector3 inputVelocity;
         private bool groundedPlayer;
         private float dash_lastingTime = 0f;
+
+        public static float SpeedBoost = 1f; // basis  1
 
         void Start()
         {
@@ -52,6 +55,8 @@ namespace JC.TrashGameToolkit.Sample
             dash_lastingTime -= Time.fixedDeltaTime;
             if(dash_lastingTime > 0)
                 inputVelocity *= DASH_SPEED_MULTIPLE;
+            
+            inputVelocity *= SpeedBoost;
 
             // rgbd velocity: only y
             float vy = rgbd.velocity.y;

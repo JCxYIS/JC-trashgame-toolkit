@@ -114,7 +114,7 @@ namespace JC.TrashGameToolkit.Sample
             }
 
             // fixme
-            exp.Replace(")(", ")×(");
+            exp = exp.Replace(")(", ")×(");
 
             return exp;
         }

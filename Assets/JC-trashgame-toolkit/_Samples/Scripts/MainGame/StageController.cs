@@ -96,6 +96,7 @@ namespace JC.TrashGameToolkit.Sample
             {
                 walls[i].stageController = this;
                 walls[i].behavior = questions[i];
+                walls[i].GetComponent<Collider>().enabled = true;
             }
         }        
     }

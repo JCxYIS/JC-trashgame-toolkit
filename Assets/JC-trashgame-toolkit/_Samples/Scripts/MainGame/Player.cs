@@ -25,6 +25,7 @@ namespace JC.TrashGameToolkit.Sample
         void Start()
         {
             gameScore = new GameScore();
+            PlayerController.SpeedBoost = 1;   
         }
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace JC.TrashGameToolkit.Sample
             if(other.CompareTag("Finish"))
             {
                 var wall = other.GetComponent<Wall>();
+                other.enabled = false;
 
                 // Make math equation
                 string exp = wall.behavior;
@@ -76,6 +78,7 @@ namespace JC.TrashGameToolkit.Sample
                 score = newScore;
                 wall.OnTrigger(delta > 0);    
                 ui.SetScore(score, delta);
+                PlayerController.SpeedBoost += 0.0148763f;
 
                 // GG
                 if(newScore <= 0)
