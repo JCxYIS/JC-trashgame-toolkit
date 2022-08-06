@@ -30,6 +30,9 @@ This package is shipped with
 
 Check if ur project conflict with 'em
 
+This package also requires Addressables Package. Install it from the package manager.
+
+
 
 <!-- ---------------------------------------------------------- -->
 
