@@ -3,12 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 
 namespace JC.TrashGameToolkit.Sample
 {
     public class GameManager : MonoSingleton<GameManager>
     {
+        /// <summary>
+        /// Call when the scene is loaded, but the loading screen is still active
+        /// </summary>
+        public UnityAction OnSceneLoaded;
+
+        /// <summary>
+        /// Call when the scene is ready to play (loading screen is gone)
+        /// </summary>
+        public UnityAction OnSceneStarted;
+
         Coroutine _goSceneCoroutine;
+
+        /* -------------------------------------------------------------------------- */
 
         /// <summary>
         /// Start Scene Transition
@@ -16,41 +29,37 @@ namespace JC.TrashGameToolkit.Sample
         /// <param name="sceneName"></param>
         public void GoScene(string sceneName, bool useLoadingScreen = false)
         {
-            if(!useLoadingScreen)
+            if (_goSceneCoroutine != null)
             {
-                SceneManager.LoadScene(sceneName);
+                Debug.LogWarning("[GameManager] GoScene: Coroutine is already running.");
                 return;
             }
 
-            if (_goSceneCoroutine == null)
-            {
-                StartCoroutine(GoSceneCoroutine(sceneName));
-            }
-            else
-            {
-                Debug.LogWarning("[GameManager] GoScene: Coroutine is already running.");
-            }
+            StartCoroutine(GoSceneCoroutine(sceneName, useLoadingScreen));
+                        
         }
 
-        IEnumerator GoSceneCoroutine(string sceneName)
+        IEnumerator GoSceneCoroutine(string sceneName, bool useLoadingScreen)
         {
             // do load
             var loadGame = SceneManager.LoadSceneAsync(sceneName);
             loadGame.allowSceneActivation = false;
             while (!loadGame.isDone)
             {
-                LoadingScreen.SetContext("Loading...");
-                LoadingScreen.SetProgress(loadGame.progress);  // capped to 0.9
+                if(useLoadingScreen)
+                {
+                    LoadingScreen.SetContext("Loading...");
+                    LoadingScreen.SetProgress(loadGame.progress);  // this is capped to 0.9                    
+                }                
 
-                if (LoadingScreen.IsFullyShown) // prevent scene is loaded faster than load screen faded in
+                if (!useLoadingScreen || LoadingScreen.IsFullyShown) // prevent scene is loaded faster than load screen faded in
                 {
                     loadGame.allowSceneActivation = true;
                 }
                 yield return null;
             }
 
-
-            // For demo purpose, let's wait 1s here
+            // For demo purpose, we can wait 1s here
             // Notice: the main scene is started at this time
             // float demoWait = 1f;
             // for (float t = 0; t < demoWait; t += Time.deltaTime)

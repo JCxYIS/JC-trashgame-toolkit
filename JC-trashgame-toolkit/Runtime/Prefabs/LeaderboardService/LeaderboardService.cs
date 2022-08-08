@@ -10,7 +10,6 @@ using System;
 /// </summary>
 public class LeaderboardService : MonoSingleton<LeaderboardService>
 {
-    // Put your API key here.
     private string GlobalstatsIOApiId = "YourApiIdHere";
     private string GlobalstatsIOApiSecret = "YourApiSecretHere";
 
@@ -23,13 +22,30 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
 
     /* -------------------------------------------------------------------------- */
 
+    /// <summary>
+    /// Initialize the service.
+    /// </summary>
+    /// <param name="globalStatsApiID"></param>
+    /// <param name="globalStatsApiSecret"></param>
+    /// <param name="userName"></param>
+    /// <param name="userId"></param>
     public void Init(string globalStatsApiID, string globalStatsApiSecret, string userName, string userId = "")
     {
         GlobalstatsIOApiId = globalStatsApiID;
         GlobalstatsIOApiSecret = globalStatsApiSecret;
         UserName = userName;  
         
-
+        // check
+        if(string.IsNullOrEmpty(globalStatsApiID))
+        {
+            Debug.LogError("[LeaderboardService] Init: GlobalstatsIOApiId is empty.");
+            return;
+        }
+        if(string.IsNullOrEmpty(globalStatsApiSecret))
+        {
+            Debug.LogError("[LeaderboardService] Init: GlobalstatsIOApiSecret is empty.");
+            return;
+        }
         if(string.IsNullOrEmpty(UserName))
         {
             throw new Exception("UserName is empty. Please set it before submitting a score.");
@@ -40,10 +56,10 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
 
         if(string.IsNullOrEmpty(UserId))
         {
-            if(PlayerPrefs.GetString("LeaderboardService.UserId") != null)
+            if(PlayerPrefs.GetString("LeaderboardService.UserId", "") != "")
             {
                 UserId = PlayerPrefs.GetString("LeaderboardService.UserId");
-                Debug.Log($"UserId is empty. Found previous saved id, \"{UserId}\"");
+                Debug.Log($"UserId is empty. Found previous saved id \"{UserId}\"");
             }
             else
             {
@@ -55,6 +71,8 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         PlayerPrefs.SetString("LeaderboardService.UserId", UserId);
         if(_client == null)
             _client = new GlobalstatsIOClient(GlobalstatsIOApiId, GlobalstatsIOApiSecret);
+
+        DontDestroyOnLoad(this);
     }
 
 
