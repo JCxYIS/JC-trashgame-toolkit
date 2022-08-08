@@ -6,16 +6,17 @@ using System;
 namespace JC.TrashGameToolkit.Sample
 {
 
-    public class Player : MonoBehaviour
+    public class Player : MovingObject
     {
         [Header("Bindings")]
         public GameObject allyPrefab;
         public MainUI ui;
 
         [Header("Runtime")]
-        public int score = 1;
-        [ReadOnly] public GameScore gameScore;
+        [ReadOnly] public GameScore gameScoreRecorder;
         [ReadOnly][SerializeField] private List<GameObject> allies = new List<GameObject>();
+        public int score => allies.Count;
+        public int gatePassed => gameScoreRecorder.GatePassed.Count;
 
 
         /// <summary>
@@ -24,8 +25,67 @@ namespace JC.TrashGameToolkit.Sample
         /// </summary>
         void Start()
         {
-            gameScore = new GameScore();
+            gameScoreRecorder = new GameScore();
             PlayerController.SpeedBoost = 1;   
+            allies.Add(gameObject);
+        }
+
+        protected override void KillSelf()
+        {
+            // base.KillSelf();
+            ApplyScore(0);
+        }
+
+        public void KillAlly(GameObject ally, bool showDeltaOnUi = true)
+        {
+            allies.Remove(ally);
+            Destroy(ally);
+            if(showDeltaOnUi)
+                RefreshUi(-1);
+        }
+
+        void ApplyScore(int newScore)
+        {
+            int delta = newScore - score;
+
+            // Apply score
+            if(delta > 0)
+            {
+                for(int i = 0; i < delta; i++)
+                {
+                    var ally = Instantiate(allyPrefab, 
+                        transform.position + new Vector3(-1+2f*UnityEngine.Random.value, 0, -1f*UnityEngine.Random.value), 
+                        Quaternion.identity);
+                    // ally.transform.parent = transform;
+                    allies.Add(ally);
+                }
+            }
+            else
+            {
+                for(int i = 0; i < -delta && allies.Count > 0; i++)
+                {
+                    if(allies.Count > 1)
+                        KillAlly(allies[1], false);
+                    else
+                        KillAlly(allies[0], false);
+                }
+            }      
+
+            RefreshUi(delta);      
+        }
+
+        void RefreshUi(int delta)
+        {
+            // set
+            ui.SetScore(score, delta);
+
+            // GG
+            if(score <= 0)
+            {
+                print("GG");
+                GameManager.Instance.GameOver(gameScoreRecorder);
+                gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -51,42 +111,14 @@ namespace JC.TrashGameToolkit.Sample
                 int newScore = (int)Math.Round(newScoreRaw);
                 int delta = newScore - score;
                 print($"{exp} = {newScore} [{newScoreRaw}]");
-                               
-                // Apply score
-                if(delta > 0)
-                {
-                    for(int i = 0; i < delta; i++)
-                    {
-                        var ally = Instantiate(allyPrefab, 
-                            transform.position + new Vector3(-1+2f*UnityEngine.Random.value, 0, -1f*UnityEngine.Random.value), 
-                            Quaternion.identity);
-                        // ally.transform.parent = transform;
-                        allies.Add(ally);
-                    }
-                }
-                else
-                {
-                    for(int i = 0; i < -delta && allies.Count > 0; i++)
-                    {
-                        Destroy(allies[0]);
-                        allies.RemoveAt(0);
-                    }
-                }                     
+                
 
                 // Invoke Event
-                gameScore.PassedGate(score, wall.behavior, newScore);
-                score = newScore;
-                ui.SetScore(score, delta);
+                gameScoreRecorder.PassedGate(score, wall.behavior, newScore);                
                 PlayerController.SpeedBoost += 0.0148763f;
                 wall.OnTrigger(delta > 0);    
 
-                // GG
-                if(newScore <= 0)
-                {
-                    print("GG");
-                    GameManager.Instance.GameOver(gameScore);
-                    gameObject.SetActive(false);
-                }  
+                ApplyScore(newScore);                                                       
             }
         }
 

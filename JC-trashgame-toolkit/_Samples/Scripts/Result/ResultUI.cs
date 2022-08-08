@@ -51,8 +51,7 @@ namespace JC.TrashGameToolkit.Sample
                 log.GetComponentInChildren<Text>().text = s.ToString();
             }
 
-            Show();
-
+            Show();            
             OnShowAnimFinished += ()=>{
                 DOTween.To(t=>{
                     _scoreText.text = (score.MaxScore * t).ToString("0");
@@ -60,6 +59,17 @@ namespace JC.TrashGameToolkit.Sample
                     _gateText.text = (score.GatePassed.Count * t).ToString("0");
                 }, 0, 1, 1.25f);
             };
+
+            LeaderboardService.Instance.SubmitScore(score.ToGTD(), true, (success)=>{
+                if(success)
+                {
+                    Debug.Log("Submit score success");
+                }
+                else
+                {
+                    Debug.LogError("Submit score failed");
+                }
+            });
         }
 
         public void OpenLeaderboard()

@@ -27,6 +27,8 @@ namespace JC.TrashGameToolkit.Sample
         // Update is called once per frame
         void Update()
         {
+            if(!_player)
+                return;
             float newZ = _player.transform.position.z + _zPosDelta;
             // if(newZ < transform.position.z)
             //     newZ = transform.position.z;

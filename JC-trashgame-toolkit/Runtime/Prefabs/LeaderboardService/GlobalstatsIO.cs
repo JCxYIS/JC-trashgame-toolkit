@@ -128,10 +128,10 @@ namespace GlobalstatsIO
             }
 
             // If no id is supplied but we have one stored, reuse it.
-            if (id == "" && this.StatisticId != "")
-            {
-                id = this.StatisticId;
-            }
+            // if (id == "" && this.StatisticId != "")
+            // {
+            //     id = this.StatisticId;
+            // }
 
             string url = "https://api.globalstats.io/v1/statistics";
             if (id != "")

@@ -36,14 +36,14 @@ public class LoadingScreen : MonoBehaviour
         _progressText.text = (100 * _currentProgress).ToString("0.00") + "%";
 
         // visibility
-        if(_currentProgress < 1)
+        if(_currentProgress < 1) // fade in
         {
-            _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, 1, 0.20f);
+            _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, 1, 0.15f);
             _canvasGroup.blocksRaycasts = true;
         }
-        else
+        else // fade out
         {
-            _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, 0, 0.05f);
+            _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, 0, 0.25f);
             _canvasGroup.blocksRaycasts = false;
         }
     }

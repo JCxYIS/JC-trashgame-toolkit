@@ -29,7 +29,7 @@ namespace JC.TrashGameToolkit.Sample
                 PromptBox.CreateMessageBox("Please enter your nickname");
                 return;
             }
-            PlayerPrefs.SetString("Username", _nicknameInput.text);
+            PlayerPrefs.SetString("nickname", _nicknameInput.text);
 
             // load the leaderboard access token
             var secret = SecretHandler.Secret;

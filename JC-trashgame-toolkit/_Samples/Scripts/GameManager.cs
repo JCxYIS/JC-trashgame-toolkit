@@ -10,14 +10,9 @@ namespace JC.TrashGameToolkit.Sample
     public class GameManager : MonoSingleton<GameManager>
     {
         /// <summary>
-        /// Call when the scene is loaded, but the loading screen is still active
+        /// Call when the scene is loaded
         /// </summary>
         public UnityAction OnSceneLoaded;
-
-        /// <summary>
-        /// Call when the scene is ready to play (loading screen is gone)
-        /// </summary>
-        public UnityAction OnSceneStarted;
 
         Coroutine _goSceneCoroutine;
 
@@ -69,7 +64,10 @@ namespace JC.TrashGameToolkit.Sample
             // }
 
             LoadingScreen.SetProgress(1); // load complete! let's hide the loading screen
+            yield return new WaitForSeconds(.5f);
+
             _goSceneCoroutine = null;
+            OnSceneLoaded?.Invoke();
         }
 
         /* -------------------------------------------------------------------------- */

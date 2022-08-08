@@ -74,12 +74,12 @@ namespace JC.TrashGameToolkit.Sample
             }
             for(int i = 0; i < walls.Length; i++)
             {
-                for(int attempt = 0; attempt < 10; attempt++) // attempt to make questions
+                for(int attempt = 0; attempt < 15; attempt++) // attempt to make questions
                 {
                     string q = MathUtil.MakeMath(complexity);
                     double delta = MathUtil.DoMath(playerScore + q) - playerScore;
                     if(
-                        (i == 0 && delta > 0 && delta < 30)|| // first wall must be good, but not too much
+                        (i == 0 && delta > 0 && delta < CurrentMaxDelta())|| // first wall must be good, but not too much
                         (i != 0 && delta < 0)    // other walls must be bad
                         )
                     {
@@ -98,6 +98,19 @@ namespace JC.TrashGameToolkit.Sample
                 walls[i].behavior = questions[i];
                 walls[i].GetComponent<Collider>().enabled = true;
             }
-        }        
+        }      
+
+        int CurrentMaxDelta()
+        {
+            if(_player.gatePassed < 10)
+                return 5;
+            else if(_player.gatePassed < 30)
+                return 10;
+            else if(_player.gatePassed < 70)
+                return 20;
+            else if(_player.gatePassed < 100)
+                return 30;
+            return 1000;
+        } 
     }
 }

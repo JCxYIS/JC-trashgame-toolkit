@@ -15,9 +15,9 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
 
     /* -------------------------------------------------------------------------- */
 
-    // The below data will be set during runtime
-    public string UserId { get; private set; } = ""; // You can optionally set this to a custom user id.
+    // The below data will be set during runtime    
     public string UserName { get; set; } = ""; // 
+    public string UserUrl { get; private set; } = ""; // User's url on the Leaderboard (If not append mode, we will keep update scores on this link)
     private GlobalstatsIOClient _client;
 
     /* -------------------------------------------------------------------------- */
@@ -29,7 +29,7 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
     /// <param name="globalStatsApiSecret"></param>
     /// <param name="userName"></param>
     /// <param name="userId"></param>
-    public void Init(string globalStatsApiID, string globalStatsApiSecret, string userName, string userId = "")
+    public void Init(string globalStatsApiID, string globalStatsApiSecret, string userName)
     {
         GlobalstatsIOApiId = globalStatsApiID;
         GlobalstatsIOApiSecret = globalStatsApiSecret;
@@ -46,29 +46,13 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
             Debug.LogError("[LeaderboardService] Init: GlobalstatsIOApiSecret is empty.");
             return;
         }
-        if(string.IsNullOrEmpty(UserName))
-        {
-            throw new Exception("UserName is empty. Please set it before submitting a score.");
-        }
+        // if(string.IsNullOrEmpty(UserName))
+        // {
+        //     throw new Exception("UserName is empty. Please set it before submitting a score.");
+        // }
 
-        if(userId != "" && UserId == "")
-            UserId = userId;
+        UserUrl = PlayerPrefs.GetString("LeaderboardService.UserUrl", "");
 
-        if(string.IsNullOrEmpty(UserId))
-        {
-            if(PlayerPrefs.GetString("LeaderboardService.UserId", "") != "")
-            {
-                UserId = PlayerPrefs.GetString("LeaderboardService.UserId");
-                Debug.Log($"UserId is empty. Found previous saved id \"{UserId}\"");
-            }
-            else
-            {
-                UserId = Guid.NewGuid().ToString();                
-                Debug.Log($"UserId is empty. Set with auto-genenrated id \"{UserId}\", saved.");
-            }
-        }
-
-        PlayerPrefs.SetString("LeaderboardService.UserId", UserId);
         if(_client == null)
             _client = new GlobalstatsIOClient(GlobalstatsIOApiId, GlobalstatsIOApiSecret);
 
@@ -80,13 +64,12 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
     /// Submit a score to the leaderboard.
     /// </summary>
     /// <param name="scores">A dictionary contains all GTD and values</param>
+    /// <param name="append">Append new score, or update the previous record of this user?</param>
     /// <param name="callback"></param>
-    public void SubmitScore(Dictionary<string, string> scores, Action<bool> callback = null)
+    public void SubmitScore(Dictionary<string, string> scores, bool append = true, Action<bool> callback = null)
     {
         // Put your game's score here, e.g.
         // payload.Add("score", rec.Score.ToString("0"));
-
-        // UserId autogen        
 
         // Validate
         if(_client == null)
@@ -101,9 +84,13 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         // Send
         StartCoroutine(_client.Share(
             values: scores, 
-            id: UserId, 
+            id: append ? "" : UserUrl, // if set, upload the score to the specified id
             name: UserName,
-            callback: null));
+            callback: succ=>{
+                if(succ)
+                    UserUrl = _client.StatisticId;
+                callback?.Invoke(succ);
+            }));
     }
 
     public void GetLeaderboard(string gtd, int numberOfPlayers = 50, Action<Leaderboard> callback = null)
@@ -118,4 +105,12 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
             numberOfPlayers: numberOfPlayers,
             callback: callback));
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    // public void GetRecord()
+    // {
+    //     return _client.GetStatistic();
+    // }
 }

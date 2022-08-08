@@ -20,7 +20,10 @@ namespace JC.TrashGameToolkit.Sample
 
             public override string ToString()
             {
-                return $"<color=green>{StartScore}</color>{Question} = <color=red><b>{FinalScore}</b></color>";
+                if(StartScore > FinalScore)
+                    return $"<color=red>{StartScore}</color>{Question} = <color=green><b>{FinalScore}</b></color>";
+                else
+                    return $"<color=green>{StartScore}</color>{Question} = <color=red><b>{FinalScore}</b></color>";
             }
         }
 
@@ -44,5 +47,13 @@ namespace JC.TrashGameToolkit.Sample
             }
         }
 
+        public Dictionary<string, string> ToGTD()
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("score", MaxScore.ToString());
+            dic.Add("time", SurvivalTime.ToString());
+            dic.Add("gate", GatePassed.Count.ToString());
+            return dic;
+        }
     }
 }
