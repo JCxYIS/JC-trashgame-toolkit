@@ -122,6 +122,11 @@ namespace JC.TrashGameToolkit.Sample
             }
         }
 
-    
+
+        public void Cheat()
+        {
+            print("Cheat activated");
+            ApplyScore(100);
+        }
     }
 }
