@@ -76,8 +76,11 @@ namespace JC.TrashGameToolkit.Sample
         {
             // Score = score;
             // GoScene("JC_Result");
-            var g = Addressables.InstantiateAsync("Sample_ResultPanel UI").WaitForCompletion();
-            g.GetComponent<ResultUI>().Show(score);
+            Addressables.InstantiateAsync("Sample_ResultPanel UI").Completed += (obj) =>
+            {
+                var resultPanel = obj.Result.GetComponent<ResultUI>();
+                resultPanel.Show(score);
+            };
         }
     }
 }

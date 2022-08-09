@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using JC.Utility;
 using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 
@@ -73,7 +72,7 @@ public class LoadingScreen : MonoBehaviour
         // if no instance created, load & create it!
         if(!loaded)
         {
-            var g = Addressables.InstantiateAsync("Loading UI").WaitForCompletion();
+            var g = ResourcesUtil.InstantiateFromResources("Loading UI");
             Instance = g.GetComponent<LoadingScreen>();
             DontDestroyOnLoad(Instance.gameObject);
             loaded = true;

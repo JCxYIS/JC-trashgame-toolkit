@@ -20,12 +20,12 @@ public class PromptBoxSettings
 
     public UnityAction CancelCallback = null;    
 
-    public string ConfirmButtonText = "確認";
+    public string ConfirmButtonText = "OK";
     
     /// <summary>
     /// Set to "" (empty string) will hide the cancel button
     /// </summary>
-    public string CancelButtonText = "取消";
+    public string CancelButtonText = "Cancel";
 
     public bool CanUseEscToCancel = true;
 }

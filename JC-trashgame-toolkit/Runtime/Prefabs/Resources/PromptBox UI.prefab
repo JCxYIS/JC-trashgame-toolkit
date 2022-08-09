@@ -296,7 +296,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.2
-  m_Text: "\u4F60\u78BA\u5B9A\uFF1F\uFF1F\n12345"
+  m_Text: '???
+
+    12345'
 --- !u!1 &3372331814913687624
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +640,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u53D6\u6D88"
+  m_Text: Cancel
 --- !u!1 &3372331815549946567
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,11 +755,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2ac52dc639330044b6ceb52cb934239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowOnAwake: 0
-  AnimDuration: 0.48763
+  _showOnAwake: 0
+  _animDuration: 0.48763
   _bgImage: {fileID: 1433207261935101815}
   _mainContainer: {fileID: 839082077472968837}
   _destroyOnHide: 1
+  _hideOnEscClicked: 1
   _titleText: {fileID: 3372331816451859770}
   _contentText: {fileID: 3372331814883340204}
   _confirmButton: {fileID: 3372331814636629782}
@@ -840,7 +843,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u78BA\u5B9A"
+  m_Text: OK
 --- !u!1 &3372331816451859768
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,14 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 3422e046fef401740a4adc9de5574f00
   m_SerializeEntries:
-  - m_GUID: 2bfd7e533199a2e49a72baa929bd76fd
-    m_Address: PromptBox UI
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 669426728bb667e48b5cd6bb4ba71e21
-    m_Address: Loading UI
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 6d2c68fb0e14479429f4fed2e7a0aea9
     m_Address: Sample_ResultPanel UI
     m_ReadOnly: 0
