@@ -19,7 +19,8 @@ namespace JC.TrashGameToolkit.Sample
         Player _player;
 
         private Queue<GameObject> _stages = new Queue<GameObject>();
-        int _stageNo = 0;
+        int _stageNo = 0; // how many gates is created
+        int _lastPlayerPassedStageIndex = -1; // use to detect overlapped collsions
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -37,7 +38,7 @@ namespace JC.TrashGameToolkit.Sample
         {
             for(int i = 0; i < 2; i++)
             {
-                CreateNextStage();
+                CreateNextStage(i+1);
             }
 
             // TEST MATH
@@ -52,10 +53,18 @@ namespace JC.TrashGameToolkit.Sample
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="currentStageIndex">To confirm</param>
-        public void CreateNextStage()
+        /// <param name="currentPlayerPassedWallIndex">To confirm</param>
+        public void CreateNextStage(int currentPlayerPassedWallIndex)
         {
+            // validate            
+            if(currentPlayerPassedWallIndex == _lastPlayerPassedStageIndex)
+            {
+                Debug.LogWarning($"[StageController] Overlapped collision detected ({currentPlayerPassedWallIndex})");
+                return;
+            }
+
             _stageNo++;
+            _lastPlayerPassedStageIndex = currentPlayerPassedWallIndex;
 
             // Create Stage
             GameObject stage = _stages.Count > 4 ? _stages.Dequeue() : Instantiate(_stagePrefab, transform.position, Quaternion.identity);
@@ -84,7 +93,7 @@ namespace JC.TrashGameToolkit.Sample
                         )
                     {
                         questions.Add(q);
-                        walls[i].SetBehavior(q);
+                        // walls[i].SetBehavior(q);
                         break;
                     }
                 }
@@ -95,7 +104,7 @@ namespace JC.TrashGameToolkit.Sample
             for(int i = 0; i < walls.Length; i++)
             {
                 walls[i].stageController = this;
-                walls[i].behavior = questions[i];
+                walls[i].Set(_stageNo, questions[i]);
                 walls[i].GetComponent<Collider>().enabled = true;
             }
         }      
@@ -106,9 +115,9 @@ namespace JC.TrashGameToolkit.Sample
                 return 5;
             else if(_player.gatePassed < 30)
                 return 10;
-            else if(_player.gatePassed < 70)
+            else if(_player.gatePassed < 60)
                 return 20;
-            else if(_player.gatePassed < 100)
+            else if(_player.gatePassed < 87)
                 return 30;
             return 1000;
         } 

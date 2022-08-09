@@ -71,6 +71,14 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         // Put your game's score here, e.g.
         // payload.Add("score", rec.Score.ToString("0"));
 
+        // Editor: Skip submitting score to the leaderboard
+        if(Application.isEditor)
+        {
+            Debug.Log("[LeaderboardService] SubmitScore: Skipped in Editor mode.");
+            callback?.Invoke(true);
+            return;
+        }
+
         // Validate
         if(_client == null)
         {

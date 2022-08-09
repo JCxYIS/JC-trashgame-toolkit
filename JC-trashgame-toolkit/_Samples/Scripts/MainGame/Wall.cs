@@ -14,7 +14,8 @@ namespace JC.TrashGameToolkit.Sample
         [Header("Bindings")]
         [SerializeField] Image gradient;
         [SerializeField] Text text;
-        [HideInInspector]public StageController stageController;
+        [HideInInspector] public StageController stageController;
+        [HideInInspector] public int _stageNo = 0;
 
         // Start is called before the first frame update
         void Start()
@@ -28,8 +29,9 @@ namespace JC.TrashGameToolkit.Sample
             text.text = behavior;
         }
 
-        public void SetBehavior(string behavior)
+        public void Set(int stageNo, string behavior)
         {
+            this._stageNo = stageNo;;
             this.behavior = behavior;
         }
 
@@ -37,7 +39,7 @@ namespace JC.TrashGameToolkit.Sample
         {
             gradient.DOColor(isGoodForPlayer ? Color.green : Color.red, 0.25f).SetLoops(2, LoopType.Yoyo);
             text.transform.DOJump(text.transform.position, 0.8f, 1, 0.5f);
-            stageController.CreateNextStage();
+            stageController.CreateNextStage(_stageNo);
         }
     }
 }
