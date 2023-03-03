@@ -2,15 +2,15 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine.AddressableAssets;
+// using UnityEngine.AddressableAssets;
 
 /// <summary>
 /// Loading Screen
 /// Call SetProgress() to display
 /// </summary>
-public class LoadingScreen : MonoBehaviour
+public class LoadingScreen : MonoSingleton<LoadingScreen>
 {
-    private static LoadingScreen Instance;
+    // private static LoadingScreen Instance;
     
     [SerializeField] CanvasGroup _canvasGroup;
     [SerializeField] Slider _progressBar;
@@ -22,6 +22,10 @@ public class LoadingScreen : MonoBehaviour
 
     /* -------------------------------------------------------------------------- */
 
+    protected override void Init()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
@@ -31,6 +35,7 @@ public class LoadingScreen : MonoBehaviour
         // progress
         _currentProgress = Mathf.Lerp(_currentProgress, _targetProgress, 0.050f);
         _currentProgress = Mathf.MoveTowards(_currentProgress, _targetProgress, 0.005f);
+
         _progressBar.value = _currentProgress;
         _progressText.text = (100 * _currentProgress).ToString("0.00") + "%";
 
@@ -66,19 +71,6 @@ public class LoadingScreen : MonoBehaviour
 
     /* -------------------------------------------------------------------------- */
 
-    static bool loaded = false;
-    private static void EnsureInstance()
-    {
-        // if no instance created, load & create it!
-        if(!loaded)
-        {
-            var g = ResourcesUtil.InstantiateFromResources("Loading UI");
-            Instance = g.GetComponent<LoadingScreen>();
-            DontDestroyOnLoad(Instance.gameObject);
-            loaded = true;
-        }
-    }
-
 
     /// <summary>
     /// Show a Loading screen
@@ -94,7 +86,6 @@ public class LoadingScreen : MonoBehaviour
             progress = 1;
 
         // haha lets go
-        EnsureInstance();
         Instance.SetProgressSelf(progress);
         Instance.SetContextSelf(context);
     }
@@ -136,7 +127,6 @@ public class LoadingScreen : MonoBehaviour
     /// <param name="context"></param>
     public static void SetContext(string context)
     {
-        EnsureInstance();
         Instance.SetContextSelf(context);
     }
 
@@ -149,7 +139,6 @@ public class LoadingScreen : MonoBehaviour
     {
         get
         {
-            EnsureInstance();
             return Instance._canvasGroup.alpha == 1;
         }
     }

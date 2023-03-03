@@ -4,13 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Mono singleton Class. Extend this class to make singleton component.
-/// Example: 
-/// <code>
-/// public class Foo : MonoSingleton<Foo>
-/// </code>. To get the instance of Foo class, use <code>Foo.Instance</code>
-/// Override <code>Init()</code> method instead of using <code>Awake()</code>
-/// from this class.
-/// edited from https://gist.github.com/onevcat/6025819
+/// Notice that this class is not thread safe, and you may want to add "DontDestroyOnload" to the singleton object.
 /// </summary>
 public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
@@ -19,26 +13,38 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     {
         get
         {
-            // Instance requiered for the first time, we look for it
-            if(!m_Instance) // if( m_Instance == null )
+            // Instance required for the first time, we look for it
+            if(!m_Instance) 
             {
                 m_Instance = GameObject.FindObjectOfType(typeof(T)) as T;
 
                 // Object not found, we create a temporary one
                 if( m_Instance == null )
                 {
-  				    // Debug.Log("No instance of " + typeof(T).ToString() + ", one is created.");
+                    string tString = typeof(T).ToString();
+  				    // Debug.Log("No instance of " + tString + ", one is created.");
 
-					isTemporaryInstance = true;
-                    m_Instance = new GameObject("[Instance] " + typeof(T).ToString(), typeof(T)).GetComponent<T>();
+                    // Look for template in Resources folder
+                    GameObject template = Resources.Load<GameObject>("Prefabs/"+tString);
+                    if(template == null)
+                    {
+                        m_Instance = new GameObject("[Instance] " + tString, typeof(T)).GetComponent<T>();
+                    }
+                    else
+                    {
+                        m_Instance = Instantiate(template).GetComponent<T>();
+                        m_Instance.name = "[Instance] " + tString + "(Instantiated from Resources/Prefabs)";
+                    }
 
-                    // Problem during the creation, this should not happen
+                    // Problem during the creation, this should not happened
                     if( m_Instance == null )
                     {
-                        Debug.LogError("Problem during the creation of " + typeof(T).ToString());
-                    }
-                }
-				if (!_isInitialized){
+                        throw new System.Exception("Problem during the creation of " + tString);
+                    }                    
+                }                
+                // Object not initaited, we init it
+				if (!_isInitialized)
+                {
 					_isInitialized = true;
 					m_Instance.Init();
 				}
@@ -46,8 +52,6 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
             return m_Instance;
         }
     }
-
-	public static bool isTemporaryInstance { private set; get; }
 
 	private static bool _isInitialized;
 

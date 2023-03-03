@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using UnityEngine.AddressableAssets;
+// using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
 
 namespace JC.TrashGameToolkit.Sample
@@ -75,12 +75,12 @@ namespace JC.TrashGameToolkit.Sample
         public void GameOver(GameScore score)
         {
             // Score = score;
-            // GoScene("JC_Result");
-            Addressables.InstantiateAsync("Sample_ResultPanel UI").Completed += (obj) =>
-            {
-                var resultPanel = obj.Result.GetComponent<ResultUI>();
-                resultPanel.Show(score);
-            };
+            GoScene("JC_Result");
+            // Addressables.InstantiateAsync("Sample_ResultPanel UI").Completed += (obj) =>
+            // {
+            //     var resultPanel = obj.Result.GetComponent<ResultUI>();
+            //     resultPanel.Show(score);
+            // };
         }
     }
 }

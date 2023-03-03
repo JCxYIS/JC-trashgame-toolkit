@@ -20,10 +20,13 @@ public class PromptBoxSettings
 
     public UnityAction CancelCallback = null;    
 
+    /// <summary>
+    /// Set to "" (empty string) will hide the button
+    /// </summary>
     public string ConfirmButtonText = "OK";
     
     /// <summary>
-    /// Set to "" (empty string) will hide the cancel button
+    /// Set to "" (empty string) will hide the button
     /// </summary>
     public string CancelButtonText = "Cancel";
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using System;
 using UnityEngine.Networking;
 using System.IO;
-using UnityEngine.AddressableAssets;
+// using UnityEngine.AddressableAssets;
 using LitJson;
 
 /// <summary>

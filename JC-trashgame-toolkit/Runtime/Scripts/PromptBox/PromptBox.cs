@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
-using UnityEngine.AddressableAssets;
+// using UnityEngine.AddressableAssets;
 
 /// <summary>
 /// Prompt box or Message box.
