@@ -126,7 +126,7 @@ public class PromptBox : PopUI
     /* -------------------------------------------------------------------------- */
 
     /// <summary>
-    /// Create a prompt box
+    /// Create a prompt box 
     /// </summary>
     /// <param name="settings">PromptBoxSettings</param>
     public static void Create(PromptBoxSettings settings)
@@ -137,7 +137,20 @@ public class PromptBox : PopUI
     }
 
     /// <summary>
-    /// A message box with content and confirm btn
+    /// Create a prompt box (message + Confirm and Cancel btn)
+    /// </summary>
+    /// <param name="settings">PromptBoxSettings</param>
+    public static void CreatePrompt(string message, UnityAction confirmCallback, PromptBoxSettings additionalSettings = null)
+    {
+        if(additionalSettings == null)
+            additionalSettings = new PromptBoxSettings();
+        additionalSettings.Content = message;
+        additionalSettings.ConfirmCallback = confirmCallback;
+        Create(additionalSettings);
+    }
+
+    /// <summary>
+    /// Create a message box (message + confirm btn)
     /// </summary>
     /// <param name="message"></param>
     /// <param name="callback"></param>
