@@ -25,6 +25,7 @@ public class Loading : MonoSingleton<Loading>
     protected void FixedUpdate()
     {
         _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, _targetProgress, 0.25f);
+        _canvasGroup.blocksRaycasts = _canvasGroup.alpha != 0;
     }
 
     /* -------------------------------------------------------------------------- */

@@ -131,7 +131,7 @@ public class PromptBox : PopUI
     /// <param name="settings">PromptBoxSettings</param>
     public static void Create(PromptBoxSettings settings)
     {
-        var g = ResourcesUtil.InstantiateFromResources("PromptBox UI");
+        var g = ResourcesUtil.InstantiateFromResources("Prefabs/PromptBox");
         PromptBox promptBox = g.GetComponent<PromptBox>();
         promptBox.Show(settings);
     }

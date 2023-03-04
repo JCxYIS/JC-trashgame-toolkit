@@ -33,7 +33,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
                     else
                     {
                         m_Instance = Instantiate(template).GetComponent<T>();
-                        m_Instance.name = "[Instance] " + tString + "(Instantiated from Resources/Prefabs)";
+                        m_Instance.name = "[Instance] " + tString + " (Instantiated from Resources/Prefabs)";
                     }
 
                     // Problem during the creation, this should not happened
