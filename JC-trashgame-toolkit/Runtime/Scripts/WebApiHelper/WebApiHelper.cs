@@ -24,11 +24,18 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
     /// 有沒有使用 ApiResponseModel (見最底下) 包裝資料
     /// 如果是 false，那 CallApi 回傳的 msg 就是空的
     /// </summary>
-    private static bool USE_API_RESPONSE_MODEL = true;
+    private static bool USE_API_RESPONSE_MODEL = false;
 
+    
+    /// <summary>
+    /// Request Headers. (e.g. Autherization, Cookies...)
+    /// Will be sent in "Cookie" Header each api calls
+    /// </summary>
+    public static Dictionary<string, string> RequestHeaders = new Dictionary<string, string>();
 
-    // runtime
-    private static string _cookie = "";
+    /// <summary>
+    /// Request id for debug
+    /// </summary>
     private static uint _requestId = 0;
 
 
@@ -37,28 +44,13 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
     // private static extern string GetRootUrl(); // 注意 CORS
 
 
+    /* -------------------------------------------------------------------------- */
 
     protected override void Init()
     {
-
+        DontDestroyOnLoad(gameObject);
     }
 
-    private void Update()
-    {
-
-    }
-
-    /* -------------------------------------------------------------------------- */
-
-    /// <summary>
-    /// A.K.A. Get session cookie
-    /// </summary>
-    public static void Login()
-    {
-        // TODO implement login
-        // ...
-        // _cookie = "...";
-    }
 
     /* -------------------------------------------------------------------------- */
 
@@ -109,9 +101,11 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
 
         UnityWebRequest www = new UnityWebRequest(url, method);
 
-        // cookie
-        if(Application.isEditor)
-            www.SetRequestHeader("cookie", _cookie);
+        // headers
+        foreach(var pair in RequestHeaders)
+        {
+            www.SetRequestHeader(pair.Key, pair.Value);
+        }
 
         // payload
         int payloadSize = 0;
@@ -128,6 +122,7 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
         // start www
         UnityWebRequestWrapper wrapper = new UnityWebRequestWrapper{id=++_requestId, request=www};
         Debug.Log($"[WebAPI] <color=teal> ({wrapper.id.ToString("000")}) {method} {url} </color>< " + 
+            (RequestHeaders.Count == 0 ? "" : $"(Headers: {RequestHeaders.Count} Entries)") +
             (payloadSize == 0 ? "" : $"(Payload: {payloadSize} bytes)")
         );
         Instance.StartCoroutine(Instance.CallApiCoroutine<T>(wrapper, callback));
@@ -171,7 +166,7 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
             if(www.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log($"[WebAPI] Server Response with Error: {www.error} [{www.url}]\n(ERR={e})\n(Resp={www.downloadHandler.text})");
-                msg = $"伺服器發生錯誤 (Err {www.responseCode})";
+                msg = $"伺服器回報錯誤 (Err {www.responseCode})";
             }
             else
             {
