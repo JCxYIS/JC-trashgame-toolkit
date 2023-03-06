@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using System;
 using UnityEngine.Networking;
-using System.IO;
 // using UnityEngine.AddressableAssets;
 using LitJson;
 
@@ -97,21 +95,23 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
         method = method.ToUpper();
         string url = route.StartsWith("http://") || route.StartsWith("https://") ? 
             route :
-            Path.Combine(ROOT_URL, route);
-
+            ROOT_URL.TrimEnd('/')+"/"+route.TrimStart('/');
         UnityWebRequest www = new UnityWebRequest(url, method);
 
         // headers
         foreach(var pair in RequestHeaders)
         {
-            www.SetRequestHeader(pair.Key, pair.Value);
+            if(pair.Value != null)
+            {
+                www.SetRequestHeader(pair.Key, pair.Value);
+            }
         }
 
         // payload
         int payloadSize = 0;
         if(payload != null)
         {
-            string payloadStr = JsonUtility.ToJson(payload);
+            string payloadStr = JsonMapper.ToJson(payload);
             byte[] postBytes = System.Text.Encoding.UTF8.GetBytes(payloadStr);
             payloadSize = postBytes.Length;
             // Debug.Log($"[WebAPI] Request Payload size={payloadSize}\nContent={payloadStr}");
@@ -132,49 +132,53 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
 
     private IEnumerator CallApiCoroutine<T>(UnityWebRequestWrapper wwwWrapper, Action<bool, string, T> callback)
     {
-        uint requestId = wwwWrapper.id;
         UnityWebRequest www = wwwWrapper.request;
-
-        // WebAPI
         www.downloadHandler = new DownloadHandlerBuffer();
-
         yield return www.SendWebRequest();
 
         // results
+        uint requestId = wwwWrapper.id;
         bool isSuccess = false;
         string msg = "";
         T returnData;        
 
-        // parse response
-        try
+        // response
+        if(www.result != UnityWebRequest.Result.Success)
         {
-            if(USE_API_RESPONSE_MODEL)
-            {
-                ApiResponseModel<T> resultModel = JsonMapper.ToObject<ApiResponseModel<T>>(www.downloadHandler.text);  
-                returnData = resultModel.data;  
-                isSuccess = true;  // isSuccess = resultModel.isSuccess;
-                // msg = resultModel.message;
-            }
-            else
-            {
-                returnData = JsonMapper.ToObject<T>(www.downloadHandler.text);
-                isSuccess = true;
-            }
-        }
-        catch(Exception e)
-        {
-            if(www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log($"[WebAPI] Server Response with Error: {www.error} [{www.url}]\n(ERR={e})\n(Resp={www.downloadHandler.text})");
-                msg = $"伺服器回報錯誤 (Err {www.responseCode})";
-            }
-            else
-            {
-                Debug.LogError(e);
-                msg = "解析資料發生錯誤";
-            }
+            Debug.LogWarning($"[WebAPI] Server Response with Error: {www.error} [{www.url}]\n(Resp={www.downloadHandler.text})");
+            msg = $"{www.downloadHandler.text}  ({www.responseCode})";
             returnData = default(T);
         }
+        else
+        {
+            // parse response data
+            try
+            {
+                if(USE_API_RESPONSE_MODEL)
+                {
+                    ApiResponseModel<T> resultModel = JsonMapper.ToObject<ApiResponseModel<T>>(www.downloadHandler.text);  
+                    returnData = resultModel.data;  
+                    isSuccess = true;  // isSuccess = resultModel.isSuccess;
+                    // msg = resultModel.message;
+                }
+                else
+                {
+                    // simple-type or json
+                    if(typeof(T).IsPrimitive || typeof(T).Equals(typeof(string)))
+                        returnData = (T)(object)www.downloadHandler.text;
+                    else
+                        returnData = JsonMapper.ToObject<T>(www.downloadHandler.text);
+                    isSuccess = true;
+                }
+            }
+            catch(Exception e)
+            {            
+
+                Debug.LogError(e);
+                msg = "解析資料時發生錯誤";
+                returnData = default(T);
+            }
+        }        
 
         Debug.Log(
             $"[WebAPI] <color=teal>({requestId.ToString("000")}) {www.method} {www.url}</color> > " +
