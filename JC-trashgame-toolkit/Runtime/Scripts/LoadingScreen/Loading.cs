@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Loading : MonoSingleton<Loading>
 {
@@ -12,9 +13,10 @@ public class Loading : MonoSingleton<Loading>
     /// <summary>
     /// Loading Context (Reason for loading)
     /// </summary>
-    protected string _contextText = "Loading...";
+    protected string _contextText = "";
 
     [SerializeField] CanvasGroup _canvasGroup;
+    [SerializeField] Text _text;
 
     /* -------------------------------------------------------------------------- */
     protected override void Init()
@@ -26,12 +28,14 @@ public class Loading : MonoSingleton<Loading>
     {
         _canvasGroup.alpha = Mathf.MoveTowards(_canvasGroup.alpha, _targetProgress, 0.25f);
         _canvasGroup.blocksRaycasts = _canvasGroup.alpha != 0;
+        _text.text = _contextText;
     }
 
     /* -------------------------------------------------------------------------- */
     
-    public void SetLoading(bool isLoading)
+    public void SetLoading(bool isLoading, string context = "Loading...")
     {
         _targetProgress = isLoading ? 1 : 0;
+        _contextText = context;
     }
 }

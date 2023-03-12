@@ -432,6 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 5396616804478135749}
+  _text: {fileID: 3592386283863412689}
 --- !u!1 &5709385416360461708
 GameObject:
   m_ObjectHideFlags: 0
