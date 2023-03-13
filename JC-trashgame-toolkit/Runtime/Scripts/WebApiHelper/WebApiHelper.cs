@@ -146,7 +146,13 @@ public class WebApiHelper : MonoSingleton<WebApiHelper>
         if(www.result != UnityWebRequest.Result.Success)
         {
             Debug.LogWarning($"[WebAPI] Server Response with Error: {www.error} [{www.url}]\n(Resp={www.downloadHandler.text})");
-            msg = $"{www.downloadHandler.text}  ({www.responseCode})";
+            if(www.result == UnityWebRequest.Result.ProtocolError)
+                if(string.IsNullOrEmpty(www.downloadHandler.text))
+                    msg = $"{www.error}  ({www.responseCode})";
+                else
+                    msg = $"{www.downloadHandler.text}  ({www.responseCode})";
+            else
+                msg = $"伺服器連接失敗  ({www.responseCode})";
             returnData = default(T);
         }
         else
