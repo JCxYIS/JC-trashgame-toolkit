@@ -25,7 +25,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
   				    // Debug.Log("No instance of " + tString + ", one is created.");
 
                     // Look for template in Resources folder
-                    GameObject template = Resources.Load<GameObject>("Prefabs/"+tString);
+                    GameObject template = ResourcesUtil.LoadFromResourcesJCTTK("Prefabs/"+tString);
                     if(template == null)
                     {
                         m_Instance = new GameObject("[Instance] " + tString, typeof(T)).GetComponent<T>();

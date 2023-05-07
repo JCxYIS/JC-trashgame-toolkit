@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 313548929443891892}
   - component: {fileID: 3088243009456151354}
   m_Layer: 5
-  m_Name: LoadingScreen
+  m_Name: LoadingScreen(JCTTKDEFAULT)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
