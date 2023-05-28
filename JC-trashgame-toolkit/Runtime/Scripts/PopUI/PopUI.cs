@@ -17,8 +17,11 @@ public class PopUI : MonoBehaviour
     [SerializeField, Tooltip("")] 
     protected bool _showOnAwake = false;
 
-    [SerializeField, Tooltip("")] 
+    [SerializeField, Tooltip("動畫長度")] 
     protected float _animDuration = 0.48763f;  
+
+    [SerializeField, Tooltip("Ignore timescale?")]
+    protected bool _ignoreTimescale = false;
 
     [SerializeField, Tooltip("(Optional) 後面的陰影，會自動加上觸碰以關閉的按紐")]
     protected Image _bgImage;
@@ -95,8 +98,10 @@ public class PopUI : MonoBehaviour
     {
         gameObject.SetActive(true);
         isShowAnimFinished = false;
-        _mainContainer.transform.DOScale(Vector3.one, _animDuration)
+        _mainContainer.transform
+            .DOScale(Vector3.one, _animDuration)
             .SetEase(Ease.OutBack)
+            .SetUpdate(_ignoreTimescale)
             .OnComplete(()=>
             {
                 isShowAnimFinished = true;
@@ -131,13 +136,16 @@ public class PopUI : MonoBehaviour
             isShowAnimFinished = true;
         }
 
-         _mainContainer.transform.DOScale(Vector3.zero, _animDuration/2f).SetEase(Ease.InCubic)
-         .onComplete += ()=>{
-            // Destroy on hide
-            if(_destroyOnHide)
-                Destroy(gameObject);
-            gameObject.SetActive(false);
-        };
+         _mainContainer.transform
+            .DOScale(Vector3.zero, _animDuration/2f)
+            .SetEase(Ease.InCubic)
+            .SetUpdate(_ignoreTimescale)
+            .onComplete += ()=>{
+                // Destroy on hide
+                if(_destroyOnHide)
+                    Destroy(gameObject);
+                gameObject.SetActive(false);
+            };
         
         if(_bgImage)
         {

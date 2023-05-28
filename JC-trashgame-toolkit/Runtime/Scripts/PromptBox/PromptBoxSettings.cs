@@ -30,5 +30,8 @@ public class PromptBoxSettings
     /// </summary>
     public string CancelButtonText = "Cancel";
 
+    /// <summary>
+    /// Can use Esc or touching gray background to cancel
+    /// </summary>
     public bool CanUseEscToCancel = true;
 }

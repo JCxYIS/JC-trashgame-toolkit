@@ -12,29 +12,25 @@ using UnityEngine.Events;
 /// /// </summary>
 public class PromptBox : PopUI
 {
+    [Header("PromptBox Bindings")]
     [SerializeField] Text _titleText; 
     [SerializeField] Text _contentText; 
     [SerializeField] Button _confirmButton;
     [SerializeField] Button _cancelButton;
+    
 
     /// <summary>
     /// The settings of this Prompt Box 
     /// </summary>
     private PromptBoxSettings _settings;
-    
-
 
     /// <summary>
-    /// Awake is called when the script instance is being loaded.
+    /// A signal flag to represent Call Confirm instead of Cancel
     /// </summary>
-    protected override void Awake()
-    {
-        // gameObject.SetActive(false);        
-        base.Awake();
-    }
+    private bool _callConfirm = false;
+    
 
     /* -------------------------------------------------------------------------- */
-
 
     /// <summary>
     /// Display the prompt box
@@ -48,20 +44,7 @@ public class PromptBox : PopUI
         // gameObject.SetActive(true);
         base.Show();
     }
-
-    public override void Show()
-    {
-        throw new System.NotSupportedException("Use Show(PromptBoxSettings) instead");
-    }
-
-    public override void Hide()
-    {
-        // gameObject.SetActive(false);
-        // Destroy(gameObject, 1);
-        // Addressables.Release(gameObject);
-        base.Hide();
-    }
-
+    
     /// <summary>
     /// Display the prompt box
     /// </summary>
@@ -76,9 +59,9 @@ public class PromptBox : PopUI
 
         // Callbacks
         _confirmButton.onClick.RemoveAllListeners();
-        _confirmButton.onClick.AddListener(OnConfirmButtonClick);
+        _confirmButton.onClick.AddListener(()=>{_callConfirm = true; Hide();});
         _cancelButton.onClick.RemoveAllListeners();
-        _cancelButton.onClick.AddListener(OnCancelButtonClick);
+        _cancelButton.onClick.AddListener(Hide);
 
         // Button Texts
         if(_settings.ConfirmButtonText == "")
@@ -106,22 +89,31 @@ public class PromptBox : PopUI
 
         // 
         _hideOnEscClicked = _settings.CanUseEscToCancel;    
-    }
 
+        _ignoreTimescale = true;
+    }
 
     /* -------------------------------------------------------------------------- */
 
-    public void OnConfirmButtonClick()
+
+#region Overriding PopUI
+    public override void Show()
     {
-        _settings.ConfirmCallback?.Invoke();
-        Hide();
+        Debug.LogWarning("Should not call Promptbox.Show() directly, you may want to use Show(PromptBoxSettings) instead");
+        base.Show();
     }
 
-    public void OnCancelButtonClick()
+    public override void Hide()
     {
-        _settings.CancelCallback?.Invoke();
-        Hide();
+        if(_callConfirm)
+            _settings.ConfirmCallback?.Invoke();
+        else
+            _settings.CancelCallback?.Invoke();
+
+        base.Hide();
     }
+#endregion
+    
 
     /* -------------------------------------------------------------------------- */
 
