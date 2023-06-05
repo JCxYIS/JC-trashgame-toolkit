@@ -23,7 +23,7 @@ public class PopUI : MonoBehaviour
     [SerializeField, Tooltip("Ignore timescale?")]
     protected bool _ignoreTimescale = false;
 
-    [SerializeField, Tooltip("(Optional) 後面的陰影，會自動加上觸碰以關閉的按紐")]
+    [SerializeField, Tooltip("(Optional) 後面的陰影，會自動加上觸碰以關閉的按鈕 (HideOnEscClicked 須為 true)")]
     protected Image _bgImage;
 
     [SerializeField, Tooltip("此 Panel 的 container")] 
@@ -63,14 +63,14 @@ public class PopUI : MonoBehaviour
             bgImage_initColor = _bgImage.color;
             _bgImage.color = Color.clear;
             _bgImage.raycastTarget = true;
-
+            
             Button hideBtn = _bgImage.GetComponent<Button>();
             if(!hideBtn)
             {
                 hideBtn = _bgImage.gameObject.AddComponent<Button>();
                 hideBtn.transition = Selectable.Transition.None;
             }
-            hideBtn.onClick.AddListener(()=>Hide());
+            hideBtn.onClick.AddListener(()=>HideWithShortcut());     
         }        
 
         // gameObject.SetActive(false);
@@ -84,11 +84,10 @@ public class PopUI : MonoBehaviour
     {
         while(true)
         {
-            if(_hideOnEscClicked && Input.GetKeyDown(KeyCode.Escape))
+            if(Input.GetKeyDown(KeyCode.Escape))
             {
-                Hide();
-            }
-
+                HideWithShortcut();
+            }            
             yield return null;
         }
     }
@@ -160,5 +159,17 @@ public class PopUI : MonoBehaviour
         //     if(_playSfx)
         //         MusicControllerJc.Instance.PlaySfx(MusicControllerJc.SfxType.Cancel);
         // }
+    }
+
+
+    /// <summary>
+    /// Hide with shortcut key e.g. Esc or BG button detected
+    /// </summary>
+    void HideWithShortcut()
+    {
+        if(_hideOnEscClicked)
+        {
+            Hide();
+        }
     }
 }
