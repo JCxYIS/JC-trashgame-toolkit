@@ -70,7 +70,7 @@ public class PromptBox : PopUI
         }
         else
         {
-            Text confirmButtText = _confirmButton.transform.GetChild(0).GetComponent<Text>();
+            Text confirmButtText = _confirmButton.GetComponentInChildren<Text>();
             confirmButtText.text = _settings.ConfirmButtonText;
         }
         if(_settings.CancelButtonText == "")
@@ -79,7 +79,7 @@ public class PromptBox : PopUI
         }
         else
         {
-            Text cancelButtText = _cancelButton.transform.GetChild(0).GetComponent<Text>();
+            Text cancelButtText = _cancelButton.GetComponentInChildren<Text>();
             cancelButtText.text = _settings.CancelButtonText;
         }
         
@@ -123,7 +123,7 @@ public class PromptBox : PopUI
     /// <param name="settings">PromptBoxSettings</param>
     public static void Create(PromptBoxSettings settings)
     {
-        var g = ResourcesUtil.InstantiateFromResources("Prefabs/PromptBox");
+        var g = ResourcesUtil.InstantiateFromResourcesJCTTK("Prefabs/PromptBox");
         PromptBox promptBox = g.GetComponent<PromptBox>();
         promptBox.Show(settings);
     }
