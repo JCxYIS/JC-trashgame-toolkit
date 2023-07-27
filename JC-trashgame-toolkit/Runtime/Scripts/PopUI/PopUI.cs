@@ -20,6 +20,9 @@ public class PopUI : MonoBehaviour
     [SerializeField, Tooltip("動畫長度")] 
     protected float _animDuration = 0.48763f;  
 
+    [SerializeField, Tooltip("動畫曲線")]
+    protected Ease _ease = Ease.OutBack;
+
     [SerializeField, Tooltip("Ignore timescale?")]
     protected bool _ignoreTimescale = false;
 
@@ -55,22 +58,23 @@ public class PopUI : MonoBehaviour
     /// </summary>
     protected virtual void Awake()
     {
+        // stay hidden hide at first
         _mainContainer.transform.localScale = Vector3.zero;        
 
-        // add hide function to bgImage
         if(_bgImage)
         {
             bgImage_initColor = _bgImage.color;
-            _bgImage.color = Color.clear;
-            _bgImage.raycastTarget = true;
+            _bgImage.color = Color.clear;            
             
-            Button hideBtn = _bgImage.GetComponent<Button>();
-            if(!hideBtn)
+            // add hide trigger to bgImage
+            Button bgImageButton = _bgImage.GetComponent<Button>();
+            if(!bgImageButton)
             {
-                hideBtn = _bgImage.gameObject.AddComponent<Button>();
-                hideBtn.transition = Selectable.Transition.None;
+                bgImageButton = _bgImage.gameObject.AddComponent<Button>();
+                bgImageButton.transition = Selectable.Transition.None;
             }
-            hideBtn.onClick.AddListener(()=>HideWithShortcut());     
+            bgImageButton.onClick.AddListener(()=>HideWithShortcut());   
+            _bgImage.raycastTarget = true;  
         }        
 
         // gameObject.SetActive(false);
@@ -99,7 +103,7 @@ public class PopUI : MonoBehaviour
         isShowAnimFinished = false;
         _mainContainer.transform
             .DOScale(Vector3.one, _animDuration)
-            .SetEase(Ease.OutBack)
+            .SetEase(_ease)
             .SetUpdate(_ignoreTimescale)
             .OnComplete(()=>
             {
