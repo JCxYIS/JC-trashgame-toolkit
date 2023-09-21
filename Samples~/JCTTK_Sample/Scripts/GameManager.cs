@@ -74,13 +74,15 @@ namespace JC.TrashGameToolkit.Sample
 
         public void GameOver(GameScore score)
         {
-            // Score = score;
-            GoScene("JC_Result");
             // Addressables.InstantiateAsync("Sample_ResultPanel UI").Completed += (obj) =>
             // {
             //     var resultPanel = obj.Result.GetComponent<ResultUI>();
             //     resultPanel.Show(score);
             // };
+            var resultPanel = ResourcesUtil.InstantiateFromResources("Prefabs/Sample_ResultPanel UI").GetComponent<ResultUI>();
+            resultPanel.Show(score);
+            
+            // GoScene("JC_Result");
         }
     }
 }

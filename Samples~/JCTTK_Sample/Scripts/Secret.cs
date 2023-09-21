@@ -25,7 +25,7 @@ namespace JC.TrashGameToolkit.Sample
                 if (_secret == null)
                 {
                     var secretJson = Resources.Load<TextAsset>("secret");
-                    if(string.IsNullOrEmpty(secretJson.text))
+                    if(string.IsNullOrEmpty(secretJson?.text))
                     {
                         Debug.LogWarning("[SecretHandler] Secret is empty, will use Secret() constructor instead");
                         _secret = new Secret();

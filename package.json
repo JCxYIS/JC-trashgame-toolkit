@@ -1,0 +1,24 @@
+{
+    "name": "com.jcxyis.jcttk",
+    "version": "3.0.0",
+    "displayName": "JC trashgame toolkit",
+    "description": "my unity toolbox, contains some convenient scripts or prefabs for instant use",
+    "unity": "2020.3",
+    "unityRelease": "33f1",
+    "documentationUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit",
+    "changelogUrl": "https://github.com/JCxYIS/JC-trashgame-toolkit/changelog.html",
+    "licensesUrl": "",
+    "author": {
+      "name": "JCxYIS",
+      "email": "me@jcxyis.com",
+      "url": "https://jcxyis.com"
+    },
+    "samples": [
+        {
+            "displayName": "Sample",
+            "description": "JCTTK Sample",
+            "path": "Samples~/JCTTK_Sample"
+        }
+    ]
+  }
+  
