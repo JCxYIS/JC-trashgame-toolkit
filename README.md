@@ -10,6 +10,12 @@ https://github.com/JCxYIS/JC-trashgame-toolkit
 
 ## Installation
 
+Install via Package Manager > Add Package via git URL
+```
+git@github.com:JCxYIS/JC-trashgame-toolkit.git
+```
+
+<!-- 
 ### 首次使用
 Navigate to unity project directory
 ```
@@ -22,6 +28,7 @@ git submodule add https://github.com/JCxYIS/JC-trashgame-toolkit
 git submodule init
 git submodule update
 ```
+-->
 
 ## Shipped Plugins
 This package is shipped with 
@@ -30,7 +37,7 @@ This package is shipped with
 
 Check if ur project conflict with 'em
 
-This package also requires Addressables Package. Install it from the package manager.
+<!-- This package also requires Addressables Package. Install it from the package manager. -->
 
 
 
@@ -139,7 +146,7 @@ e.g. 下圖：遊戲中連續輸入密技 JCCOOL 就會觸發底下 OnActivate
 
 ## :computer: Scripts 
 
-### Singleton
+### MonoSingleton
 很常見的單例設計典範
 
 ```csharp
@@ -149,7 +156,7 @@ public class XXXManager : MonoSingleton<GameManager>
 }
 ```
 ```csharp
-XXXManager.Instance.DoSomething();
+XXManager.Instance.DoSomething();
 ```
 
 > Ref: https://gist.github.com/onevcat/6025819
