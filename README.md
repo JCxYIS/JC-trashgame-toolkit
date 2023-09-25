@@ -43,13 +43,6 @@ Check if ur project conflict with 'em
 
 <!-- ---------------------------------------------------------- -->
 
-## Installation
-- In Unity, open the Package Manager
-- Click "+" button on the top left
-- Select "add package from git URL"
-- `https://github.com/JCxYIS/JC-trashgame-toolkit.git`
-- Click add. Done.
-
 ## :game_die: Prefabs
 ### ProgressBar ==TODO==
 血條/進度條 
