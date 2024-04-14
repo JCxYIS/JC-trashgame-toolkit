@@ -8,11 +8,20 @@ namespace JC.TrashGameToolkit.Sample
     public class LandingSceneController : MonoBehaviour
     {
         public InputField _nicknameInput;
+        public Secret Secret;
 
         // Start is called before the first frame update
         void Start()
         {
             _nicknameInput.text = PlayerPrefs.GetString("nickname", "");
+
+            if(!Secret)
+            {
+                Debug.LogError("Secret is not set! Please create a Secret asset and assign it to LandingSceneController");
+                return;
+            }
+
+            LeaderboardService.Instance.Init(Secret.LeaderboardAccessToken, Secret.LeaderboardSecret);
         }
 
         // Update is called once per frame
@@ -32,17 +41,18 @@ namespace JC.TrashGameToolkit.Sample
             PlayerPrefs.SetString("nickname", _nicknameInput.text);
 
             // load the leaderboard access token
-            var secret = SecretHandler.Secret;
             
             // initialize the leaderboard
-            LeaderboardService.Instance.Init(secret.LeaderboardAccessToken, secret.LeaderboardSecret, _nicknameInput.text);
+            // LeaderboardService.Instance.Init(Secret.LeaderboardAccessToken, Secret.LeaderboardSecret, _nicknameInput.text);
+            LeaderboardService.Instance.SetUserName(_nicknameInput.text);
 
             GameManager.Instance.GoScene("JC_Main"/*, true*/);
         }
 
         public void OpenLeaderboard()
         {
-            Application.OpenURL(SecretHandler.Secret.LeaderboardUrl);
+            // Application.OpenURL(Secret.LeaderboardUrl);
+            LeaderboardPanel.Create(new List<string> { "score", "gates", "time" });
         }
     }
 }

@@ -27,13 +27,10 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
     /// </summary>
     /// <param name="globalStatsApiID"></param>
     /// <param name="globalStatsApiSecret"></param>
-    /// <param name="userName"></param>
-    /// <param name="userId"></param>
-    public void Init(string globalStatsApiID, string globalStatsApiSecret, string userName)
+    public void Init(string globalStatsApiID, string globalStatsApiSecret)
     {
         GlobalstatsIOApiId = globalStatsApiID;
         GlobalstatsIOApiSecret = globalStatsApiSecret;
-        UserName = userName;  
         
         // check
         if(string.IsNullOrEmpty(globalStatsApiID))
@@ -45,18 +42,31 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         {
             Debug.LogError("[LeaderboardService] Init: GlobalstatsIOApiSecret is empty.");
             return;
-        }
-        // if(string.IsNullOrEmpty(UserName))
-        // {
-        //     throw new Exception("UserName is empty. Please set it before submitting a score.");
-        // }
-
-        UserUrl = PlayerPrefs.GetString("LeaderboardService.UserUrl", "");
+        }        
 
         if(_client == null)
             _client = new GlobalstatsIOClient(GlobalstatsIOApiId, GlobalstatsIOApiSecret);
 
         DontDestroyOnLoad(this);
+    }
+
+    /// <summary>
+    /// Initialize the service (w/ username).
+    /// </summary>
+    /// <param name="globalStatsApiID"></param>
+    /// <param name="globalStatsApiSecret"></param>
+    /// <param name="userName"></param>
+    /// <param name="userId"></param>
+    public void Init(string globalStatsApiID, string globalStatsApiSecret, string userName)
+    {
+        Init(globalStatsApiID, globalStatsApiSecret);
+        SetUserName(userName);
+    }
+
+    public void SetUserName(string userName)
+    {
+        UserName = userName;
+        UserUrl = PlayerPrefs.GetString("LeaderboardService.UserUrl", "");
     }
 
 
@@ -88,6 +98,10 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         {
             throw new Exception("The scores you want to submit is empty. Please set it.");
         }
+        if(string.IsNullOrEmpty(UserName))
+        {
+            Debug.LogWarning("[LeaderboardService] SubmitScore: UserName is empty.");
+        }
 
         // Send
         StartCoroutine(_client.Share(
@@ -101,12 +115,18 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
             }));
     }
 
+    /// <summary>
+    /// Get the leaderboard with a specific GTD.
+    /// </summary>
+    /// <param name="gtd">record/score entry</param>
+    /// <param name="numberOfPlayers">max players to retrieve</param>
+    /// <param name="callback"></param>
     public void GetLeaderboard(string gtd, int numberOfPlayers = 50, Action<Leaderboard> callback = null)
     {
-        if(_client == null)
-        {
-            throw new Exception("Please call Init() before submitting a score.");
-        }
+        // if(_client == null)
+        // {
+        //     throw new Exception("Please call Init() before submitting a score.");
+        // }
 
         StartCoroutine(_client.GetLeaderboard(
             gtd: gtd,

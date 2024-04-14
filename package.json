@@ -1,6 +1,6 @@
 {
     "name": "com.jcxyis.jcttk",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "displayName": "JC trashgame toolkit",
     "description": "my unity toolbox, contains some convenient scripts or prefabs for instant use",
     "unity": "2020.3",
