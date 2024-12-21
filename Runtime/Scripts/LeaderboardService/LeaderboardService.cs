@@ -18,6 +18,8 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
     // The below data will be set during runtime    
     public string UserName { get; set; } = ""; // 
     public string UserUrl { get; private set; } = ""; // User's url on the Leaderboard (If not append mode, we will keep update scores on this link)
+    
+    public bool DoSendInEditor { get; set; } = false; 
     private GlobalstatsIOClient _client;
 
     /* -------------------------------------------------------------------------- */
@@ -82,9 +84,9 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
         // payload.Add("score", rec.Score.ToString("0"));
 
         // Editor: Skip submitting score to the leaderboard
-        if(Application.isEditor)
+        if(Application.isEditor && !DoSendInEditor)
         {
-            Debug.Log("[LeaderboardService] SubmitScore: Skipped in Editor mode.");
+            Debug.Log("[LeaderboardService] SubmitScore: Skipped in Editor mode. If you want to send the score, please set LeaderboardService.DoSendInEditor to true.");
             callback?.Invoke(true);
             return;
         }
@@ -110,7 +112,10 @@ public class LeaderboardService : MonoSingleton<LeaderboardService>
             name: UserName,
             callback: succ=>{
                 if(succ)
+                {
                     UserUrl = _client.StatisticId;
+                    PlayerPrefs.SetString("LeaderboardService.UserUrl", UserUrl);
+                }
                 callback?.Invoke(succ);
             }));
     }
